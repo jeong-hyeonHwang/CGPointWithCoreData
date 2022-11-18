@@ -8,14 +8,14 @@
         <relationship name="scene" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Scene" inverseName="points" inverseEntity="Scene"/>
     </entity>
     <entity name="RouteFinding" representedClassName="RouteFinding" syncable="YES">
+        <attribute name="dataWrittenDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="gymName" optional="YES" attributeType="String"/>
-        <attribute name="gymVisitDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isChallengeComplete" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="problemLevel" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="scenes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Scene" inverseName="routeFinding" inverseEntity="Scene"/>
     </entity>
     <entity name="Scene" representedClassName="Scene" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BodyPoint" inverseName="scene" inverseEntity="BodyPoint"/>
         <relationship name="routeFinding" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RouteFinding" inverseName="scenes" inverseEntity="RouteFinding"/>
     </entity>

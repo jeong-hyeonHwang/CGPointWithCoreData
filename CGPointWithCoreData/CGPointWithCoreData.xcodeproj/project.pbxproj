@@ -16,10 +16,11 @@
 		3A53352B29276082007BFE6B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A53352929276082007BFE6B /* LaunchScreen.storyboard */; };
 		3A5335402927B02A007BFE6B /* BodyPoint+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A53353E2927B02A007BFE6B /* BodyPoint+CoreDataClass.swift */; };
 		3A5335412927B02A007BFE6B /* BodyPoint+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A53353F2927B02A007BFE6B /* BodyPoint+CoreDataProperties.swift */; };
-		3A5335472927B06F007BFE6B /* Scene+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5335432927B06F007BFE6B /* Scene+CoreDataClass.swift */; };
-		3A5335482927B06F007BFE6B /* Scene+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5335442927B06F007BFE6B /* Scene+CoreDataProperties.swift */; };
-		3A5335492927B06F007BFE6B /* RouteFinding+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5335452927B06F007BFE6B /* RouteFinding+CoreDataClass.swift */; };
-		3A53354A2927B06F007BFE6B /* RouteFinding+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5335462927B06F007BFE6B /* RouteFinding+CoreDataProperties.swift */; };
+		3A53354C2927B169007BFE6B /* CoreDataDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A53354B2927B169007BFE6B /* CoreDataDAO.swift */; };
+		3A5335532927B293007BFE6B /* RouteFinding+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5335512927B293007BFE6B /* RouteFinding+CoreDataClass.swift */; };
+		3A5335542927B293007BFE6B /* RouteFinding+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5335522927B293007BFE6B /* RouteFinding+CoreDataProperties.swift */; };
+		3A5335572927CA26007BFE6B /* Scene+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5335552927CA26007BFE6B /* Scene+CoreDataClass.swift */; };
+		3A5335582927CA26007BFE6B /* Scene+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5335562927CA26007BFE6B /* Scene+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,10 +35,11 @@
 		3A53352C29276082007BFE6B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A53353E2927B02A007BFE6B /* BodyPoint+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BodyPoint+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3A53353F2927B02A007BFE6B /* BodyPoint+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BodyPoint+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		3A5335432927B06F007BFE6B /* Scene+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scene+CoreDataClass.swift"; sourceTree = "<group>"; };
-		3A5335442927B06F007BFE6B /* Scene+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scene+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		3A5335452927B06F007BFE6B /* RouteFinding+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RouteFinding+CoreDataClass.swift"; sourceTree = "<group>"; };
-		3A5335462927B06F007BFE6B /* RouteFinding+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RouteFinding+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3A53354B2927B169007BFE6B /* CoreDataDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataDAO.swift; sourceTree = "<group>"; };
+		3A5335512927B293007BFE6B /* RouteFinding+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RouteFinding+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3A5335522927B293007BFE6B /* RouteFinding+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RouteFinding+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3A5335552927CA26007BFE6B /* Scene+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scene+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3A5335562927CA26007BFE6B /* Scene+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scene+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,10 +90,11 @@
 			children = (
 				3A53353E2927B02A007BFE6B /* BodyPoint+CoreDataClass.swift */,
 				3A53353F2927B02A007BFE6B /* BodyPoint+CoreDataProperties.swift */,
-				3A5335432927B06F007BFE6B /* Scene+CoreDataClass.swift */,
-				3A5335442927B06F007BFE6B /* Scene+CoreDataProperties.swift */,
-				3A5335452927B06F007BFE6B /* RouteFinding+CoreDataClass.swift */,
-				3A5335462927B06F007BFE6B /* RouteFinding+CoreDataProperties.swift */,
+				3A5335552927CA26007BFE6B /* Scene+CoreDataClass.swift */,
+				3A5335562927CA26007BFE6B /* Scene+CoreDataProperties.swift */,
+				3A5335512927B293007BFE6B /* RouteFinding+CoreDataClass.swift */,
+				3A5335522927B293007BFE6B /* RouteFinding+CoreDataProperties.swift */,
+				3A53354B2927B169007BFE6B /* CoreDataDAO.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -167,15 +170,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A53354C2927B169007BFE6B /* CoreDataDAO.swift in Sources */,
+				3A5335582927CA26007BFE6B /* Scene+CoreDataProperties.swift in Sources */,
 				3A53352029276082007BFE6B /* ViewController.swift in Sources */,
-				3A5335492927B06F007BFE6B /* RouteFinding+CoreDataClass.swift in Sources */,
+				3A5335572927CA26007BFE6B /* Scene+CoreDataClass.swift in Sources */,
 				3A53351C29276082007BFE6B /* AppDelegate.swift in Sources */,
-				3A5335482927B06F007BFE6B /* Scene+CoreDataProperties.swift in Sources */,
 				3A53352629276082007BFE6B /* CGPointWithCoreData.xcdatamodeld in Sources */,
-				3A53354A2927B06F007BFE6B /* RouteFinding+CoreDataProperties.swift in Sources */,
 				3A53351E29276082007BFE6B /* SceneDelegate.swift in Sources */,
 				3A5335412927B02A007BFE6B /* BodyPoint+CoreDataProperties.swift in Sources */,
-				3A5335472927B06F007BFE6B /* Scene+CoreDataClass.swift in Sources */,
+				3A5335542927B293007BFE6B /* RouteFinding+CoreDataProperties.swift in Sources */,
+				3A5335532927B293007BFE6B /* RouteFinding+CoreDataClass.swift in Sources */,
 				3A5335402927B02A007BFE6B /* BodyPoint+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
