@@ -45,10 +45,10 @@ class RouteTableViewCell: UITableViewCell {
         })
         
         NSLayoutConstraint.activate([
-            writtenDateLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            writtenDateLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            writtenDateLabel.widthAnchor.constraint(equalToConstant: 300),
-            writtenDateLabel.heightAnchor.constraint(equalToConstant: 32)
+            gymNameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            gymNameLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            gymNameLabel.widthAnchor.constraint(equalToConstant: 300),
+            gymNameLabel.heightAnchor.constraint(equalToConstant: 32)
         ])
     }
     
@@ -65,7 +65,7 @@ class RouteTableViewCell: UITableViewCell {
 }
 
 extension RouteTableViewCell {
-    func labelConfigure(writtenDateText: String) {
-        writtenDateLabel.text = writtenDateText
+    func labelConfigure(gymNameText: String) {
+        gymNameLabel.text = gymNameText
     }
 }

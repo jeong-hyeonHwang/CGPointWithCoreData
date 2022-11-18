@@ -15,10 +15,14 @@ class RouteViewController: UIViewController {
         return view
     }()
     
+    private lazy var rowLastIndex: Int = {
+        return CoreDataManager.shared.readRouteFindingData().count
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        CoreDataManager.shared.deleteAllData()
+//        CoreDataManager.shared.deleteAllData()
         
         layoutConfigure()
         navigationBarConfigure()
@@ -53,32 +57,32 @@ class RouteViewController: UIViewController {
 
 extension RouteViewController {
     @objc func addRouteButtonClicked() {
-        print("Click: ADD BUTTON")
-        
-        let route: Route = Route(dataWrittenDate: Date(), gymName: "아띠", problemLevel: 3, isChallengeComplete: false)
+        let route: Route = Route(dataWrittenDate: Date(), gymName: "아띠 ROUTE \(rowLastIndex)", problemLevel: 3, isChallengeComplete: false)
         CoreDataManager.shared.createRouteFindingData(info: route)
-        print(CoreDataManager.shared.readData().count)
+        rowLastIndex += 1
         routeTableView.reloadData()
     }
 }
 
 extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return CoreDataManager.shared.readData().count
+        return CoreDataManager.shared.readRouteFindingData().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RouteTableViewCell", for: indexPath) as! RouteTableViewCell
         
         let index = indexPath.row
-        let date = CoreDataManager.shared.readData()[index].dataWrittenDate
-        cell.labelConfigure(writtenDateText: date.dateToString())
+        let gymName = CoreDataManager.shared.readRouteFindingData()[index].gymName
+        cell.labelConfigure(gymNameText: gymName)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
-        print(index)
+        let pageViewController = PageViewController()
+        pageViewController.routeFinding = CoreDataManager.shared.readRouteFindingData()[index]
+        navigationController?.pushViewController(pageViewController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
