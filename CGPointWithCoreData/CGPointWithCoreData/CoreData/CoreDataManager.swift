@@ -1,5 +1,5 @@
 //
-//  CoreDataDAO.swift
+//  CoreDataManager.swift
 //  CGPointWithCoreData
 //
 //  Created by 황정현 on 2022/11/18.
@@ -8,15 +8,17 @@
 import UIKit
 import CoreData
 
-class CoreDataDAO {
+class CoreDataManager {
+
+     static let shared = CoreDataManager()
     
     private let appDelegate = UIApplication.shared.delegate as! AppDelegate
     private lazy var context = appDelegate.persistentContainer.viewContext
-    
+
     init() { }
     
     // R 구조체를 매개변수로 받아 RouteFinding NSManagedObject에 추가
-    func createRouteFindingData(info: RouteFinding) -> NSManagedObject {
+    func createRouteFindingData(info: Route) -> NSManagedObject {
         let entity = NSEntityDescription.insertNewObject(forEntityName: "RouteFinding", into: context)
         
         entity.setValue(UUID(), forKey: "id")
