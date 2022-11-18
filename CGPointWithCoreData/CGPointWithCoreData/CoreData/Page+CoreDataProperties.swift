@@ -1,8 +1,8 @@
 //
-//  Scene+CoreDataProperties.swift
+//  Page+CoreDataProperties.swift
 //  CGPointWithCoreData
 //
-//  Created by 황정현 on 2022/11/18.
+//  Created by 황정현 on 2022/11/19.
 //
 //
 
@@ -10,19 +10,20 @@ import Foundation
 import CoreData
 
 
-extension Scene {
+extension Page {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Scene> {
-        return NSFetchRequest<Scene>(entityName: "Scene")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Page> {
+        return NSFetchRequest<Page>(entityName: "Page")
     }
 
+    @NSManaged public var rowOrder: Int16
     @NSManaged public var points: NSSet?
     @NSManaged public var routeFinding: RouteFinding
 
 }
 
 // MARK: Generated accessors for points
-extension Scene {
+extension Page {
 
     @objc(addPointsObject:)
     @NSManaged public func addToPoints(_ value: BodyPoint)
@@ -38,6 +39,6 @@ extension Scene {
 
 }
 
-extension Scene : Identifiable {
+extension Page : Identifiable {
 
 }

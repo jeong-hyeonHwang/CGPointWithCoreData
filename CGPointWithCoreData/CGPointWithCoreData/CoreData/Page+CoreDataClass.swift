@@ -1,5 +1,5 @@
 //
-//  RouteFinding+CoreDataClass.swift
+//  Page+CoreDataClass.swift
 //  CGPointWithCoreData
 //
 //  Created by 황정현 on 2022/11/19.
@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-@objc(RouteFinding)
-public class RouteFinding: NSManagedObject {
+@objc(Page)
+public class Page: NSManagedObject {
 
 }

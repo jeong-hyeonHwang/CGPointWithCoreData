@@ -32,14 +32,14 @@ class CoreDataManager {
         return entity
     }
     
-    func createSceneData(routeFinding: RouteFinding) -> Scene {
-        let scene = Scene(context: context)
-        routeFinding.addToScenes(scene)
+    func createPageData(rowOrder: Int, routeFinding: RouteFinding) -> Page {        let page = Page(context: context)
+        page.rowOrder = Int16(rowOrder)
+        routeFinding.addToPages(page)
         
-        return scene
+        return page
     }
     
-    func createPointData(point: BodyPoint, scene: Scene) -> BodyPoint {
+    func createPointData(point: BodyPoint, scene: Page) -> BodyPoint {
         let bodyPoint = BodyPoint(context: context)
         scene.addToPoints(bodyPoint)
         
@@ -47,13 +47,31 @@ class CoreDataManager {
     }
     
     // Core Data의 읽어 RouteFinding 클래스를 반환합니다.
-    func readData() -> [RouteFinding] {
+    func readRouteFindingData() -> [RouteFinding] {
+        let request = RouteFinding.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "dataWrittenDate", ascending: true)]
         var information: [RouteFinding] = []
+        do {
+            information = try context.fetch(request)
+            
+        } catch {
+            print("CoreDataManager ReadData Method \(error.localizedDescription)")
+        }
+        
+        return information
+    }
+    
+    // Core Data의 읽어 RouteFinding 클래스를 반환합니다.
+    func readPageData(routeFinding: RouteFinding) -> [Page] {
+        let request = Page.fetchRequest()
+        request.predicate = NSPredicate(format: "routeFinding = %@", routeFinding)
+        
+        var information: [Page] = []
         
         do {
-            information = try context.fetch(RouteFinding.fetchRequest())
+            information = try context.fetch(request)
         } catch {
-            print("CoreDataDAO ReadData Method \(error.localizedDescription)")
+            print("CoreDataManager ReadData Method \(error.localizedDescription)")
         }
         
         return information
@@ -72,14 +90,14 @@ class CoreDataManager {
                 context.delete(tempInfo)
             }
         } catch {
-            print("CoreDataDAO DeleteData Method \(error.localizedDescription)")
+            print("CoreDataManager DeleteData Method \(error.localizedDescription)")
         }
         saveData()
     }
     
     // 전체 데이터 삭제를 위한 메소드
     func deleteAllData() {
-        let objects = readData()
+        let objects = readRouteFindingData()
         
         if objects.count > 0 {
             for object in objects {
@@ -94,7 +112,7 @@ class CoreDataManager {
         do {
             try context.save()
         } catch {
-            print("CoreDataDAO SaveData Method \(error.localizedDescription)")
+            print("CoreDataManager SaveData Method \(error.localizedDescription)")
         }
     }
 }

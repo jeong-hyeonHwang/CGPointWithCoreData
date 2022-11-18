@@ -2,7 +2,7 @@
 //  RouteFinding+CoreDataProperties.swift
 //  CGPointWithCoreData
 //
-//  Created by 황정현 on 2022/11/18.
+//  Created by 황정현 on 2022/11/19.
 //
 //
 
@@ -16,29 +16,29 @@ extension RouteFinding {
         return NSFetchRequest<RouteFinding>(entityName: "RouteFinding")
     }
 
-    @NSManaged public var id: UUID?
     @NSManaged public var dataWrittenDate: Date
     @NSManaged public var gymName: String
-    @NSManaged public var problemLevel: Int16
+    @NSManaged public var id: UUID?
     @NSManaged public var isChallengeComplete: Bool
-    @NSManaged public var scenes: NSSet?
+    @NSManaged public var problemLevel: Int16
+    @NSManaged public var pages: NSSet?
 
 }
 
-// MARK: Generated accessors for scenes
+// MARK: Generated accessors for pages
 extension RouteFinding {
 
-    @objc(addScenesObject:)
-    @NSManaged public func addToScenes(_ value: Scene)
+    @objc(addPagesObject:)
+    @NSManaged public func addToPages(_ value: Page)
 
-    @objc(removeScenesObject:)
-    @NSManaged public func removeFromScenes(_ value: Scene)
+    @objc(removePagesObject:)
+    @NSManaged public func removeFromPages(_ value: Page)
 
-    @objc(addScenes:)
-    @NSManaged public func addToScenes(_ values: NSSet)
+    @objc(addPages:)
+    @NSManaged public func addToPages(_ values: NSSet)
 
-    @objc(removeScenes:)
-    @NSManaged public func removeFromScenes(_ values: NSSet)
+    @objc(removePages:)
+    @NSManaged public func removeFromPages(_ values: NSSet)
 
 }
 

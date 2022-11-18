@@ -20,7 +20,7 @@ extension BodyPoint {
     @NSManaged public var isForce: Bool
     @NSManaged public var primaryPostion: NSObject
     @NSManaged public var secondaryPositon: NSObject?
-    @NSManaged public var scene: Scene
+    @NSManaged public var page: Page
 
 }
 

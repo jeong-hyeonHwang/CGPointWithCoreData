@@ -5,7 +5,12 @@
         <attribute name="isForce" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="primaryPostion" optional="YES" attributeType="Transformable"/>
         <attribute name="secondaryPositon" optional="YES" attributeType="Transformable"/>
-        <relationship name="scene" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Scene" inverseName="points" inverseEntity="Scene"/>
+        <relationship name="scene" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Page" inverseName="points" inverseEntity="Page"/>
+    </entity>
+    <entity name="Page" representedClassName="Page" syncable="YES">
+        <attribute name="rowOrder" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BodyPoint" inverseName="scene" inverseEntity="BodyPoint"/>
+        <relationship name="routeFinding" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RouteFinding" inverseName="pages" inverseEntity="RouteFinding"/>
     </entity>
     <entity name="RouteFinding" representedClassName="RouteFinding" syncable="YES">
         <attribute name="dataWrittenDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -13,10 +18,6 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isChallengeComplete" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="problemLevel" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="scenes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Scene" inverseName="routeFinding" inverseEntity="Scene"/>
-    </entity>
-    <entity name="Scene" representedClassName="Scene" syncable="YES">
-        <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BodyPoint" inverseName="scene" inverseEntity="BodyPoint"/>
-        <relationship name="routeFinding" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RouteFinding" inverseName="scenes" inverseEntity="RouteFinding"/>
+        <relationship name="pages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Page" inverseName="routeFinding" inverseEntity="Page"/>
     </entity>
 </model>
