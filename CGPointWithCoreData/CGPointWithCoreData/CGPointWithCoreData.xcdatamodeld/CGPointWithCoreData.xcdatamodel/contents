@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="true" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21279" systemVersion="21G115" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="BodyPoint" representedClassName="BodyPoint" syncable="YES">
+        <attribute name="footOrHand" optional="YES" attributeType="String"/>
+        <attribute name="isForce" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="primaryPostion" optional="YES" attributeType="Transformable"/>
+        <attribute name="secondaryPositon" optional="YES" attributeType="Transformable"/>
+        <relationship name="scene" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Scene" inverseName="points" inverseEntity="Scene"/>
+    </entity>
+    <entity name="RouteFinding" representedClassName="RouteFinding" syncable="YES">
+        <attribute name="gymName" optional="YES" attributeType="String"/>
+        <attribute name="gymVisitDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="problemLevel" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="scenes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Scene" inverseName="routeFinding" inverseEntity="Scene"/>
+    </entity>
+    <entity name="Scene" representedClassName="Scene" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BodyPoint" inverseName="scene" inverseEntity="BodyPoint"/>
+        <relationship name="routeFinding" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RouteFinding" inverseName="scenes" inverseEntity="RouteFinding"/>
+    </entity>
 </model>
