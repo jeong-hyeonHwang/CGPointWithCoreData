@@ -9,7 +9,7 @@ import Foundation
 
 extension Date {
     func dateToString() -> String {
-        let date = self.formatted(date: .numeric, time: .shortened)
+        let date = self.formatted(date: .omitted, time: .complete)
         return String(date)
     }
 }
