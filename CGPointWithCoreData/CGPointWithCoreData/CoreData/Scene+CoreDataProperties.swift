@@ -16,7 +16,6 @@ extension Scene {
         return NSFetchRequest<Scene>(entityName: "Scene")
     }
 
-    @NSManaged public var id: UUID
     @NSManaged public var points: NSSet?
     @NSManaged public var routeFinding: RouteFinding
 

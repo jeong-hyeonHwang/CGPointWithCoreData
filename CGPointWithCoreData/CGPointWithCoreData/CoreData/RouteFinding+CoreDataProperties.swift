@@ -16,10 +16,11 @@ extension RouteFinding {
         return NSFetchRequest<RouteFinding>(entityName: "RouteFinding")
     }
 
-    @NSManaged public var id: UUID
-    @NSManaged public var gymVisitDate: Date
+    @NSManaged public var id: UUID?
+    @NSManaged public var dataWrittenDate: Date
     @NSManaged public var gymName: String
     @NSManaged public var problemLevel: Int16
+    @NSManaged public var isChallengeComplete: Bool
     @NSManaged public var scenes: NSSet?
 
 }
