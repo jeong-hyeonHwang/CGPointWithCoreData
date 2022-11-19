@@ -9,6 +9,8 @@ import UIKit
 
 class RouteViewController: UIViewController {
    
+    var routeFindingList: [RouteFinding] = CoreDataManager.shared.readRouteFindingData()
+    
     private lazy var routeTableView = {
         let view = UITableView()
         
@@ -16,26 +18,74 @@ class RouteViewController: UIViewController {
     }()
     
     private lazy var rowLastIndex: Int = {
-        return CoreDataManager.shared.readRouteFindingData().count
+        return routeFindingList.count
+    }()
+    
+    private lazy var routeInfoView = {
+        let view = UIView()
+        
+        return view
+    }()
+    
+    private lazy var pageNumberLabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.textAlignment = .center
+        
+        return label
+    }()
+    
+    private lazy var pointsNumberLabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12, weight: .light)
+        label.textAlignment = .center
+        label.numberOfLines = 5
+        
+        return label
     }()
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
-//        CoreDataManager.shared.deleteAllData()
         
         layoutConfigure()
         navigationBarConfigure()
+        
     }
     
     func layoutConfigure() {
-        [routeTableView].forEach({
+        [routeTableView, routeInfoView].forEach({
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         })
         
+        [pageNumberLabel, pointsNumberLabel].forEach({
+            routeInfoView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        })
+        
         let safeArea = view.safeAreaLayoutGuide
-
+        let margin: CGFloat = 16
+        
+        NSLayoutConstraint.activate([
+            routeInfoView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            routeInfoView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            routeInfoView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            routeInfoView.heightAnchor.constraint(equalToConstant: 200)
+        ])
+        
+        NSLayoutConstraint.activate([
+            pointsNumberLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: margin),
+            pointsNumberLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -margin),
+            pointsNumberLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            pointsNumberLabel.heightAnchor.constraint(equalToConstant: 72)
+        ])
+        
+        NSLayoutConstraint.activate([
+            pageNumberLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: margin),
+            pageNumberLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -margin),
+            pageNumberLabel.bottomAnchor.constraint(equalTo: pointsNumberLabel.topAnchor, constant: -margin),
+            pageNumberLabel.heightAnchor.constraint(equalToConstant: 32)
+        ])
+        
         NSLayoutConstraint.activate([
             routeTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             routeTableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
@@ -57,32 +107,46 @@ class RouteViewController: UIViewController {
 
 extension RouteViewController {
     @objc func addRouteButtonClicked() {
-        let route: Route = Route(dataWrittenDate: Date(), gymName: "아띠 ROUTE \(rowLastIndex)", problemLevel: 3, isChallengeComplete: false)
-        CoreDataManager.shared.createRouteFindingData(info: route)
-        rowLastIndex += 1
-        routeTableView.reloadData()
+        let rootVC = PageViewController()
+        rootVC.routeInfo = RouteInfo(dataWrittenDate: Date(), gymName: "", problemLevel: 0, isChallengeComplete: false, pages: [PageInfo(rowOrder: 0, points: [])])
+        
+        let modalTypeNavigationVC = UINavigationController(rootViewController: rootVC)
+        modalTypeNavigationVC.modalPresentationStyle = .fullScreen
+        self.present(modalTypeNavigationVC, animated: true, completion: nil)
     }
 }
 
 extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return CoreDataManager.shared.readRouteFindingData().count
+        return routeFindingList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RouteTableViewCell", for: indexPath) as! RouteTableViewCell
         
         let index = indexPath.row
-        let gymName = CoreDataManager.shared.readRouteFindingData()[index].gymName
-        cell.labelConfigure(gymNameText: gymName)
+        cell.labelConfigure(routeIndex: index)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
-        let pageViewController = PageViewController()
-        pageViewController.routeFinding = CoreDataManager.shared.readRouteFindingData()[index]
-        navigationController?.pushViewController(pageViewController, animated: true)
+        let route = CoreDataManager.shared.readRouteFindingData()[index]
+        let pages = route.pages as! Set<Page>
+        let pageNum = pages.count
+        let indices = pages.indices.map{$0}
+        print("TABLE VIEW ROW TOUCHED")
+        print("PAGE NUM: \(pageNum)")
+        
+        var pointsNumStr = "POINTS NO ORDER\n[ "
+        for i in 0..<pageNum {
+            let pointsNum = pages[indices[i]].points?.count
+            pointsNumStr += " \(pointsNum)"
+        }
+        pointsNumStr += " ]"
+        
+        pageNumberLabel.text = "PAGE FOR \(pageNum)"
+        pointsNumberLabel.text = pointsNumStr
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
