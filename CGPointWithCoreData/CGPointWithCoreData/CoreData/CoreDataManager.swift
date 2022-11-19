@@ -27,8 +27,6 @@ class CoreDataManager {
         entity.setValue(info.problemLevel, forKey: "problemLevel")
         entity.setValue(info.isChallengeComplete, forKey: "isChallengeComplete")
         
-        saveData()
-        
         return entity
     }
     
