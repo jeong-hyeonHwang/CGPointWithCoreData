@@ -18,28 +18,55 @@ class CoreDataManager {
     init() { }
     
     // R 구조체를 매개변수로 받아 RouteFinding NSManagedObject에 추가
-    func createRouteFindingData(info: Route) -> NSManagedObject {
-        let entity = NSEntityDescription.insertNewObject(forEntityName: "RouteFinding", into: context)
+    func createRouteFindingData(routeInfo: RouteInfo) -> NSManagedObject {
+        let routeFinding = NSEntityDescription.insertNewObject(forEntityName: "RouteFinding", into: context)
         
-        entity.setValue(UUID(), forKey: "id")
-        entity.setValue(info.gymName, forKey: "gymName")
-        entity.setValue(info.dataWrittenDate, forKey: "dataWrittenDate")
-        entity.setValue(info.problemLevel, forKey: "problemLevel")
-        entity.setValue(info.isChallengeComplete, forKey: "isChallengeComplete")
+        routeFinding.setValue(UUID(), forKey: "id")
+        routeFinding.setValue(routeInfo.gymName, forKey: "gymName")
+        routeFinding.setValue(routeInfo.dataWrittenDate, forKey: "dataWrittenDate")
+        routeFinding.setValue(routeInfo.problemLevel, forKey: "problemLevel")
+        routeFinding.setValue(routeInfo.isChallengeComplete, forKey: "isChallengeComplete")
         
-        return entity
+        if routeInfo.pages.count == 0 {
+            print("THERE's NO PAGE...")
+        } else {
+            routeInfo.pages.forEach({ pageInfo in
+                createPageData(pageInfo: pageInfo, routeFinding: routeFinding as! RouteFinding)
+            })
+        }
+        
+        
+        
+        return routeFinding
     }
     
-    func createPageData(rowOrder: Int, routeFinding: RouteFinding) -> Page {        let page = Page(context: context)
-        page.rowOrder = Int16(rowOrder)
+    func createPageData(pageInfo: PageInfo, routeFinding: RouteFinding) {
+        let page = Page(context: context)
+        page.rowOrder = Int16(pageInfo.rowOrder)
         routeFinding.addToPages(page)
         
-        return page
+        if pageInfo.points?.count == 0 {
+            print("THERE's NO POINT..")
+        } else {
+            pageInfo.points?.forEach({ bodyPointInfo in
+                createPointData(bodyPointInfo: bodyPointInfo, page: page)
+            })
+        }
     }
     
-    func createPointData(point: BodyPoint, scene: Page) -> BodyPoint {
+    func createPointData(bodyPointInfo: BodyPointInfo, page: Page) -> BodyPoint {
         let bodyPoint = BodyPoint(context: context)
-        scene.addToPoints(bodyPoint)
+        bodyPoint.footOrHand = bodyPointInfo.footOrHand.rawValue
+        bodyPoint.isForce = bodyPointInfo.isForce
+        bodyPoint.primaryPostion = bodyPointInfo.primaryPostion as NSObject
+        
+        if let secondaryPoint = bodyPointInfo.secondaryPositon {
+            bodyPoint.secondaryPositon = secondaryPoint as NSObject
+        } else {
+            bodyPoint.secondaryPositon = nil
+        }
+        
+        page.addToPoints(bodyPoint)
         
         return bodyPoint
     }
