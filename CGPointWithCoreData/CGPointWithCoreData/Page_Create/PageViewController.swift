@@ -9,7 +9,11 @@ import UIKit
 
 class PageViewController: UIViewController {
 
+    var route: RouteFinding?
     var routeInfo: RouteInfo!
+    var newPageInfo: [PageInfo] = []
+    var newPointInfo: [(page: Page,bodyPointInfo: [BodyPointInfo])] = []
+    var isModalType: Bool!
     
     private lazy var pageTableView = {
         let view = UITableView()
@@ -114,18 +118,35 @@ class PageViewController: UIViewController {
 
 extension PageViewController {
     @objc func addPageButtonClicked() {
-        routeInfo.pages.append(PageInfo(rowOrder: routeInfo.pages.count , points: []))
-        print(routeInfo.pages.count)
+        let pageInfo = PageInfo(rowOrder: routeInfo.pages.count , points: [])
+        routeInfo.pages.append(pageInfo)
+        newPageInfo.append(pageInfo)
         pageTableView.reloadData()
     }
     
     @objc func saveRouteButtonClicked() {
-        CoreDataManager.shared.createRouteFindingData(routeInfo: routeInfo)
-        dismiss(animated: true)
+        if isModalType {
+            DataManager.shared.addRoute(routeInfo: routeInfo)
+            dismiss(animated: true)
+        } else {
+            DataManager.shared.updatePageData(pageInfo: newPageInfo, routeFinding: route!)
+            DataManager.shared.updatePointData(pointInfo: newPointInfo)
+            navigationController?.popViewController(animated: true)
+        }
     }
+    
     func addBodyPointButtonClicked(index: Int) {
-        routeInfo.pages[index].points?.append(BodyPointInfo(footOrHand: FootOrHand.foot, isForce: false, primaryPostion: CGPoint(x: 0, y: 0), secondaryPositon: nil))
-        print("ADD POINTS FOR \(routeInfo.pages[index].points?.count)")
+        let point = BodyPointInfo(footOrHand: FootOrHand.foot, isForce: false, primaryPostion: CGPoint(x: 0, y: 0), secondaryPositon: nil)
+        routeInfo.pages[index].points?.append(point)
+
+        guard route != nil else { return }
+        let pages = Array(route?.pages as! Set<Page>)
+        let indices = newPageInfo.filter({ $0.rowOrder == routeInfo.pages[index].rowOrder}).indices
+        if indices.count > 0 {
+            newPageInfo[indices[0]].points?.append(point)
+        } else {
+            newPointInfo.append((page: pages[index], bodyPointInfo: [point]))
+        }
     }
 }
 
@@ -145,7 +166,6 @@ extension PageViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
-        print("CURRENT SELECTED PAGE: \(index)")
         let vc = BodyPointListViewController()
         vc.pageInfo = routeInfo.pages[index]
         

@@ -31,6 +31,8 @@
 		3A5335812929662A007BFE6B /* BodyPointListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5335802929662A007BFE6B /* BodyPointListViewController.swift */; };
 		3A5335832929665E007BFE6B /* BodyPointListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5335822929665E007BFE6B /* BodyPointListTableViewCell.swift */; };
 		3A53358529296759007BFE6B /* FootOrHand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A53358429296759007BFE6B /* FootOrHand.swift */; };
+		3A533587292A412F007BFE6B /* DataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A533586292A412F007BFE6B /* DataRepository.swift */; };
+		3A533589292A42C6007BFE6B /* CoreDataDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A533588292A42C6007BFE6B /* CoreDataDAO.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +62,8 @@
 		3A5335802929662A007BFE6B /* BodyPointListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyPointListViewController.swift; sourceTree = "<group>"; };
 		3A5335822929665E007BFE6B /* BodyPointListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyPointListTableViewCell.swift; sourceTree = "<group>"; };
 		3A53358429296759007BFE6B /* FootOrHand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FootOrHand.swift; sourceTree = "<group>"; };
+		3A533586292A412F007BFE6B /* DataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataRepository.swift; sourceTree = "<group>"; };
+		3A533588292A42C6007BFE6B /* CoreDataDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataDAO.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,7 +99,7 @@
 				3A5335612927E3BC007BFE6B /* Extensions */,
 				3A53357A29291648007BFE6B /* Main */,
 				3A5335602927DDDF007BFE6B /* Route */,
-				3A5335672927F77C007BFE6B /* Page */,
+				3A5335672927F77C007BFE6B /* Page_Create */,
 				3A53357F29296606007BFE6B /* BodyPoint */,
 				3A5335592927D948007BFE6B /* Model */,
 				3A5335422927B02F007BFE6B /* CoreData */,
@@ -119,6 +123,8 @@
 				3A53357029280AE7007BFE6B /* Page+CoreDataClass.swift */,
 				3A53357129280AE7007BFE6B /* Page+CoreDataProperties.swift */,
 				3A53354B2927B169007BFE6B /* CoreDataManager.swift */,
+				3A533586292A412F007BFE6B /* DataRepository.swift */,
+				3A533588292A42C6007BFE6B /* CoreDataDAO.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -151,13 +157,13 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		3A5335672927F77C007BFE6B /* Page */ = {
+		3A5335672927F77C007BFE6B /* Page_Create */ = {
 			isa = PBXGroup;
 			children = (
 				3A5335682927F7C1007BFE6B /* PageViewController.swift */,
 				3A53356A2927F851007BFE6B /* PageTableViewCell.swift */,
 			);
-			path = Page;
+			path = Page_Create;
 			sourceTree = "<group>";
 		};
 		3A53357A29291648007BFE6B /* Main */ = {
@@ -253,10 +259,12 @@
 				3A53352029276082007BFE6B /* RouteViewController.swift in Sources */,
 				3A53355F2927DDD7007BFE6B /* RouteTableViewCell.swift in Sources */,
 				3A53358529296759007BFE6B /* FootOrHand.swift in Sources */,
+				3A533587292A412F007BFE6B /* DataRepository.swift in Sources */,
 				3A5335812929662A007BFE6B /* BodyPointListViewController.swift in Sources */,
 				3A53357229280AE7007BFE6B /* Page+CoreDataClass.swift in Sources */,
 				3A53351C29276082007BFE6B /* AppDelegate.swift in Sources */,
 				3A5335792929151A007BFE6B /* MainViewController.swift in Sources */,
+				3A533589292A42C6007BFE6B /* CoreDataDAO.swift in Sources */,
 				3A53357E29294B64007BFE6B /* BodyPointInfo.swift in Sources */,
 				3A5335692927F7C1007BFE6B /* PageViewController.swift in Sources */,
 				3A53352629276082007BFE6B /* CGPointWithCoreData.xcdatamodeld in Sources */,
