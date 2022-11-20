@@ -8,8 +8,6 @@
 import UIKit
 
 class RouteViewController: UIViewController {
-   
-    var routeFindingList: [RouteFinding] = CoreDataManager.shared.readRouteFindingData()
     
     private lazy var routeTableView = {
         let view = UITableView()
@@ -18,7 +16,7 @@ class RouteViewController: UIViewController {
     }()
     
     private lazy var rowLastIndex: Int = {
-        return routeFindingList.count
+        return DataManager.shared.routeFindingList().count
     }()
     
     private lazy var routeInfoView = {
@@ -45,10 +43,12 @@ class RouteViewController: UIViewController {
     }()
     
     override func viewDidLoad() {
-        
         layoutConfigure()
         navigationBarConfigure()
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        routeTableView.reloadData()
     }
     
     func layoutConfigure() {
@@ -109,6 +109,8 @@ extension RouteViewController {
     @objc func addRouteButtonClicked() {
         let rootVC = PageViewController()
         rootVC.routeInfo = RouteInfo(dataWrittenDate: Date(), gymName: "", problemLevel: 0, isChallengeComplete: false, pages: [PageInfo(rowOrder: 0, points: [])])
+        rootVC.isModalType = true
+        rootVC.route = nil
         
         let modalTypeNavigationVC = UINavigationController(rootViewController: rootVC)
         modalTypeNavigationVC.modalPresentationStyle = .fullScreen
@@ -118,7 +120,7 @@ extension RouteViewController {
 
 extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return routeFindingList.count
+        return DataManager.shared.routeFindingList().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -131,11 +133,10 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
-        let route = CoreDataManager.shared.readRouteFindingData()[index]
+        let route = DataManager.shared.routeFindingList()[index]
         let pages = route.pages as! Set<Page>
         let pageNum = pages.count
         let indices = pages.indices.map{$0}
-        print("TABLE VIEW ROW TOUCHED")
         print("PAGE NUM: \(pageNum)")
         
         var pointsNumStr = "POINTS NO ORDER\n[ "
@@ -147,6 +148,27 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
         
         pageNumberLabel.text = "PAGE FOR \(pageNum)"
         pointsNumberLabel.text = pointsNumStr
+        
+        let vc = PageViewController()
+        let pageArray = Array(route.pages as! Set<Page>)
+        var pageInfo: [PageInfo] = []
+        var points2dimensionArray: [[BodyPointInfo]] = []
+        for i in 0..<pageArray.count {
+            let pointsArray = Array(pageArray[i].points as! Set<BodyPoint>)
+            var pointInfo: [BodyPointInfo] = []
+            for j in 0..<pointsArray.count {
+                let temp = BodyPointInfo(footOrHand: FootOrHand(rawValue: pointsArray[j].footOrHand) ?? FootOrHand.hand, isForce: pointsArray[j].isForce, primaryPostion: pointsArray[j].primaryPostion as! CGPoint, secondaryPositon: pointsArray[j].secondaryPositon as? CGPoint)
+                pointInfo.append(temp)
+            }
+            points2dimensionArray.append(pointInfo)
+            pageInfo.append(PageInfo(rowOrder: Int(pageArray[i].rowOrder), points: points2dimensionArray[i]))
+//            let pointInfo = pointsArray.map { BodyPointInfo(footOrHand: FootOrHand(rawValue: $0.footOrHand) ?? FootOrHand.foot, isForce: $0.isForce, primaryPostion: $0.primaryPostion as! CGPoint, secondaryPositon: $0.secondaryPositon?)
+//            }
+        }
+        vc.routeInfo = RouteInfo(dataWrittenDate: route.dataWrittenDate, gymName: route.gymName, problemLevel: Int(route.problemLevel), isChallengeComplete: route.isChallengeComplete, pages: pageInfo)
+        vc.isModalType = false
+        vc.route = route
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
