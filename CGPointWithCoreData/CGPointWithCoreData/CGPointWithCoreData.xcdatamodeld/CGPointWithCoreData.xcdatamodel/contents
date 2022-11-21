@@ -5,11 +5,11 @@
         <attribute name="isForce" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="primaryPostion" optional="YES" attributeType="Transformable"/>
         <attribute name="secondaryPositon" optional="YES" attributeType="Transformable"/>
-        <relationship name="scene" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Page" inverseName="points" inverseEntity="Page"/>
+        <relationship name="page" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Page" inverseName="points" inverseEntity="Page"/>
     </entity>
     <entity name="Page" representedClassName="Page" syncable="YES">
         <attribute name="rowOrder" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BodyPoint" inverseName="scene" inverseEntity="BodyPoint"/>
+        <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BodyPoint" inverseName="page" inverseEntity="BodyPoint"/>
         <relationship name="routeFinding" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RouteFinding" inverseName="pages" inverseEntity="RouteFinding"/>
     </entity>
     <entity name="RouteFinding" representedClassName="RouteFinding" syncable="YES">

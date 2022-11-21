@@ -12,27 +12,25 @@ final class DataManager {
     
     static var shared = DataManager()
     
-    private var repository: DataRepository
     private var coreDataDAO: CoreDataDAO
-    
+    private var routeFindingList: [RouteFinding] = []
     init() {
-        repository = DataRepository()
         coreDataDAO = CoreDataDAO()
         updateRepository()
     }
     
     // CoreData 정보를 DataRepository의 routeFindingList에 할당
     func updateRepository() {
-        repository.routeFindingList = coreDataDAO.readRouteFindingData()
+        routeFindingList = coreDataDAO.readRouteFindingData()
     }
     
-    func routeFindingList() -> [RouteFinding] {
-        return repository.routeFindingList
+    func getRouteFindingList() -> [RouteFinding] {
+        return routeFindingList
     }
     
     func addRoute(routeInfo: RouteInfo) {
         let routeFinding = coreDataDAO.createRouteFindingData(routeInfo: routeInfo) as! RouteFinding
-        repository.routeFindingList.append(routeFinding)
+        routeFindingList.append(routeFinding)
     }
 
     func updatePageData(pageInfo: [PageInfo], routeFinding: RouteFinding) {
@@ -41,22 +39,23 @@ final class DataManager {
         }
     }
     
-    func updatePointData(pointInfo: [(Page, [BodyPointInfo])]) {
-        for info in pointInfo {
-            for bodyPoint in info.1 {
-                coreDataDAO.createPointData(bodyPointInfo: bodyPoint, page: info.0)
-            }
+    func updatePointData(pointInfo: [Page : [BodyPointInfo]]) {
+        for (key, value) in pointInfo {
+            coreDataDAO.createPointData(bodyPointInfo: value, page: key)
         }
     }
     
-    func removePagesData(pages: [Page], routeFinding: RouteFinding) {
+    func deletePagesData(pages: [Page], routeFinding: RouteFinding) {
         coreDataDAO.deletePageData(pages: pages, routeFinding: routeFinding)
     }
     
-    func removePointsData(points: [BodyPoint], page: Page) {
-        coreDataDAO.deletePointData(points: points, page: page)
+    func deletePointsData(removePointList: [Page : [BodyPoint]]) {
+        coreDataDAO.deletePointData(removePointList: removePointList)
     }
     
+    func deleteRouteData(route: RouteFinding) {
+        coreDataDAO.deleteRouteFindingData(routeFinding: route)
+    }
     
     func saveData() {
         coreDataDAO.saveData()

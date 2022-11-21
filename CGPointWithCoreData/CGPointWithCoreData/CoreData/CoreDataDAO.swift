@@ -45,30 +45,32 @@ class CoreDataDAO {
             print("THERE's NO POINT..")
         } else {
             pageInfo.points?.forEach({ bodyPointInfo in
-                createPointData(bodyPointInfo: bodyPointInfo, page: page)
+//                createPointData(bodyPointInfo: bodyPointInfo, page: page)
             })
         }
     }
     
-    func createPointData(bodyPointInfo: BodyPointInfo, page: Page) {
-        let bodyPoint = BodyPoint(context: context)
-        bodyPoint.footOrHand = bodyPointInfo.footOrHand.rawValue
-        bodyPoint.isForce = bodyPointInfo.isForce
-        bodyPoint.primaryPostion = bodyPointInfo.primaryPostion as NSObject
-        
-        if let secondaryPoint = bodyPointInfo.secondaryPositon {
-            bodyPoint.secondaryPositon = secondaryPoint as NSObject
-        } else {
-            bodyPoint.secondaryPositon = nil
+    func createPointData(bodyPointInfo: [BodyPointInfo], page: Page) {
+        for info in bodyPointInfo {
+            let bodyPoint = BodyPoint(context: context)
+            bodyPoint.footOrHand = info.footOrHand.rawValue
+            bodyPoint.isForce = info.isForce
+            bodyPoint.primaryPostion = info.primaryPostion as NSObject
+            
+            if let secondaryPoint = info.secondaryPosition {
+                bodyPoint.secondaryPosition = secondaryPoint as NSObject
+            } else {
+                bodyPoint.secondaryPosition = nil
+            }
+            
+            page.addToPoints(bodyPoint)
         }
-        
-        page.addToPoints(bodyPoint)
     }
     
     // Core Data의 읽어 RouteFinding 클래스를 반환합니다.
     func readRouteFindingData() -> [RouteFinding] {
         let request = RouteFinding.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "dataWrittenDate", ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(key: "dataWrittenDate", ascending: false)]
         var information: [RouteFinding] = []
         do {
             information = try context.fetch(request)
@@ -96,6 +98,25 @@ class CoreDataDAO {
         return information
     }
     
+    func updatePointData(pointData: [Page : [(BodyPoint, BodyPointInfo)]]) {
+        let request = BodyPoint.fetchRequest()
+        for (key, value) in pointData {
+            request.predicate = NSPredicate(format: "page = %@", key)
+            do {
+                let information = try context.fetch(request)
+//                if information.count > 0 {
+//                    for info in information {
+//                        info.setValue(
+//                    }
+//                }
+//                if let tempInfo = info.first {
+////                    tempInfo.setValue(value)
+//                }
+            } catch {
+                print("CoreDataDAO UpdateFeedback Method \(error.localizedDescription)")
+            }
+        }
+    }
     // 단일 데이터 삭제를 위한 메소드
     func deleteRouteFindingData(routeFinding: RouteFinding) {
         
@@ -111,7 +132,7 @@ class CoreDataDAO {
         } catch {
             print("CoreDataManager DeleteData Method \(error.localizedDescription)")
         }
-        saveData()
+//        saveData()
     }
     
     func deletePageData(pages: [Page], routeFinding: RouteFinding) {
@@ -121,28 +142,14 @@ class CoreDataDAO {
         saveData()
     }
     
-    func deletePointData(points: [BodyPoint], page: Page) {
-        for point in points {
-            page.removeFromPoints(point)
-        }
-        saveData()
-    }
-    
-    func deletePointData(point: BodyPoint) {
-        let request = BodyPoint.fetchRequest()
-        
-        request.predicate = NSPredicate(format: "page == %@", point)
-        do {
-            let info = try context.fetch(request)
-            if let tempInfo = info.first {
-                context.delete(tempInfo)
+    func deletePointData(removePointList: [Page : [BodyPoint]]) {
+        for (key, value) in removePointList {
+            for point in value {
+                key.removeFromPoints(point)
             }
-        } catch {
-            print("CoreDataManager DeleteData Method \(error.localizedDescription)")
         }
         saveData()
     }
-    
     
     // 전체 데이터 삭제를 위한 메소드
     func deleteAllData() {

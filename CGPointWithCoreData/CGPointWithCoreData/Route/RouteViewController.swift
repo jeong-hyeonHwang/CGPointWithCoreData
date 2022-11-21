@@ -9,6 +9,8 @@ import UIKit
 
 class RouteViewController: UIViewController {
     
+    private var routeList: [RouteFinding] = DataManager.shared.getRouteFindingList()
+    
     private lazy var routeTableView = {
         let view = UITableView()
         
@@ -16,7 +18,7 @@ class RouteViewController: UIViewController {
     }()
     
     private lazy var rowLastIndex: Int = {
-        return DataManager.shared.routeFindingList().count
+        return DataManager.shared.getRouteFindingList().count
     }()
     
     private lazy var routeInfoView = {
@@ -48,6 +50,7 @@ class RouteViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        routeList = DataManager.shared.getRouteFindingList()
         routeTableView.reloadData()
     }
     
@@ -96,7 +99,7 @@ class RouteViewController: UIViewController {
         routeTableView.delegate = self
         routeTableView.dataSource = self
         routeTableView.register(RouteTableViewCell.self,
-                      forCellReuseIdentifier: RouteTableViewCell.identifier)
+                                forCellReuseIdentifier: RouteTableViewCell.identifier)
     }
     
     func navigationBarConfigure() {
@@ -108,7 +111,7 @@ class RouteViewController: UIViewController {
 extension RouteViewController {
     @objc func addRouteButtonClicked() {
         let rootVC = PageViewController()
-        rootVC.routeInfoForUI = RouteInfo(dataWrittenDate: Date(), gymName: "", problemLevel: 0, isChallengeComplete: false, pages: [PageInfo(rowOrder: 0, points: [])])
+        rootVC.routeInfoForUI = RouteInfo(dataWrittenDate: Date.randomBetween(start: Date(timeIntervalSince1970: 0), end: Date(timeIntervalSince1970: 30000)), gymName: "", problemLevel: 0, isChallengeComplete: false, pages: [PageInfo(rowOrder: 0, points: [])])
         rootVC.isModalType = true
         rootVC.route = nil
         
@@ -120,20 +123,20 @@ extension RouteViewController {
 
 extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return DataManager.shared.routeFindingList().count
+        return routeList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RouteTableViewCell", for: indexPath) as! RouteTableViewCell
         
         let index = indexPath.row
-        cell.labelConfigure(routeIndex: index)
+        cell.labelConfigure(routeInfo: routeList[index])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
-        let route = DataManager.shared.routeFindingList()[index]
+        let route = routeList[index]
         let pages = route.pages as! Set<Page>
         let pageNum = pages.count
         let indices = pages.indices.map{$0}
@@ -157,14 +160,13 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
             let pointsArray = Array(pageArray[i].points as! Set<BodyPoint>)
             var pointInfo: [BodyPointInfo] = []
             for j in 0..<pointsArray.count {
-                let temp = BodyPointInfo(footOrHand: FootOrHand(rawValue: pointsArray[j].footOrHand) ?? FootOrHand.hand, isForce: pointsArray[j].isForce, primaryPostion: pointsArray[j].primaryPostion as! CGPoint, secondaryPositon: pointsArray[j].secondaryPositon as? CGPoint)
+                let temp = BodyPointInfo(footOrHand: FootOrHand(rawValue: pointsArray[j].footOrHand) ?? FootOrHand.hand, isForce: pointsArray[j].isForce, primaryPostion: pointsArray[j].primaryPostion as! CGPoint, secondaryPosition: pointsArray[j].secondaryPosition as? CGPoint)
                 pointInfo.append(temp)
             }
             points2dimensionArray.append(pointInfo)
             pageInfo.append(PageInfo(rowOrder: Int(pageArray[i].rowOrder), points: points2dimensionArray[i]))
-//            let pointInfo = pointsArray.map { BodyPointInfo(footOrHand: FootOrHand(rawValue: $0.footOrHand) ?? FootOrHand.foot, isForce: $0.isForce, primaryPostion: $0.primaryPostion as! CGPoint, secondaryPositon: $0.secondaryPositon?)
-//            }
         }
+        
         vc.routeInfoForUI = RouteInfo(dataWrittenDate: route.dataWrittenDate, gymName: route.gymName, problemLevel: Int(route.problemLevel), isChallengeComplete: route.isChallengeComplete, pages: pageInfo)
         vc.isModalType = false
         vc.route = route
@@ -175,4 +177,14 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
         return 50
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete {
+            print(indexPath)
+            let index = indexPath.row
+            DataManager.shared.deleteRouteData(route: routeList[index])
+            routeList.remove(at: index)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
 }
