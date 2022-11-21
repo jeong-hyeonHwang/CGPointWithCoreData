@@ -9,13 +9,29 @@ import UIKit
 
 class PageViewController: UIViewController {
     
+    // isModalType == false && 기존에 존재하는 데이터를 들고올 때
     var route: RouteFinding?
-    var routeInfo: RouteInfo!
+    
+    // isModalType == true && 새롭게 데이터를 추가하는 경우
+    var routeInfoForUI: RouteInfo!
+    
+    // 새롭게 추가할 Page에 대한 배열
     var newPageInfo: [PageInfo] = []
+    
+    // 새롭게 추가할 Point에 대한 배열
     var newPointInfo: [(page: Page, bodyPointInfo: [BodyPointInfo])] = []
-    var removePage: [Page] = []
-    var removePoint: [(Page, BodyPoint)] = []
+    
+    // 기존에 존재하는 데이터 중 삭제할 Page에 대한 배열
+    var removePageList: [Page] = []
+    
+    // 기존에 존재하는 데이터 중 삭제할 BodyPoint에 대한 배열
+    var removePointList: [(Page, BodyPoint)] = []
+    
+    // isModalType == true -> 데이터 추가를 위해 PageVC를 띄운 경우
+    // isModalType == false -> 데이터 수정 및 삭제를 위해 PageVC를 띄운 경우
     var isModalType: Bool!
+    
+    // isModalType == false로 데이터 수정 및 삭제를 위해
     private var pages: [Page] = []
     
     private var addPointMode: Bool = true
@@ -109,7 +125,7 @@ class PageViewController: UIViewController {
         NSLayoutConstraint.activate([
             seperatorView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             seperatorView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            seperatorView.bottomAnchor.constraint(equalTo: addPageButton.topAnchor, constant: -margin),
+            seperatorView.bottomAnchor.constraint(equalTo: removePointButton.topAnchor, constant: -margin),
             seperatorView.heightAnchor.constraint(equalToConstant: 4)
         ])
         
@@ -147,24 +163,28 @@ class PageViewController: UIViewController {
 
 extension PageViewController {
     @objc func addPageButtonClicked() {
-        let pageInfo = PageInfo(rowOrder: routeInfo.pages.count , points: [])
-        routeInfo.pages.append(pageInfo)
+        let pageInfo = PageInfo(rowOrder: routeInfoForUI.pages.count , points: [])
+        routeInfoForUI.pages.append(pageInfo)
         newPageInfo.append(pageInfo)
         pageTableView.reloadData()
     }
     
     @objc func saveRouteButtonClicked() {
         if isModalType {
-            DataManager.shared.addRoute(routeInfo: routeInfo)
+            DataManager.shared.addRoute(routeInfo: routeInfoForUI)
             dismiss(animated: true)
         } else {
-            DataManager.shared.updatePageData(pageInfo: newPageInfo, routeFinding: route!)
-            DataManager.shared.updatePointData(pointInfo: newPointInfo)
             if let route = route {
-                DataManager.shared.removePagesData(pages: removePage, routeFinding: route)
-                for temp in removePoint
+                
+                // 기존 데이터에 페이지 및 포인트 추가
+                DataManager.shared.updatePageData(pageInfo: newPageInfo, routeFinding: route)
+                DataManager.shared.updatePointData(pointInfo: newPointInfo)
+                
+                // 기존 데이터에 페이지 및 포인트 제거
+                DataManager.shared.removePagesData(pages: removePageList, routeFinding: route)
+                for point in removePointList
                 {
-                    DataManager.shared.removePointsData(points: [temp.1], page: temp.0)
+                    DataManager.shared.removePointsData(points: [point.1], page: point.0)
                 }
             }
             navigationController?.popViewController(animated: true)
@@ -173,54 +193,49 @@ extension PageViewController {
     
     func addBodyPointButtonClicked(index: Int) {
         let point = BodyPointInfo(footOrHand: FootOrHand.foot, isForce: false, primaryPostion: CGPoint(x: 0, y: 0), secondaryPositon: nil)
-        routeInfo.pages[index].points?.append(point)
+        routeInfoForUI.pages[index].points?.append(point)
         
         guard route != nil else { return }
-        let indices = newPageInfo.filter({ $0.rowOrder == routeInfo.pages[index].rowOrder}).indices
+        let indices = newPageInfo.filter({ $0.rowOrder == routeInfoForUI.pages[index].rowOrder}).indices
+        
+        // 페이지가 '추가될 데이터'에 존재하는 경우
         if indices.count > 0 {
             newPageInfo[indices[0]].points?.append(point)
+        
+        // 페이지가 '기존의 데이터'에 존재하는 경우
         } else {
             newPointInfo.append((page: pages[index], bodyPointInfo: [point]))
-        }
-    }
-    
-    func removeBodyPointButtonClicked(pageIndex: Int, pointIndex: Int) {
-        
-        let points = Array(pages[pageIndex].points as! Set<BodyPoint>)
-        if points.count > pointIndex {
-            let removePointData = points[pointIndex]
-            removePoint.append((pages[pageIndex], removePointData))
-        } else {
-            let indices = newPointInfo.filter({ $0.page.rowOrder == pages[pageIndex].rowOrder}).indices
-            if indices.count > 0 {
-                newPointInfo.remove(at: indices[0])
-            }
         }
     }
     
     @objc func removeBodyPoitButtonClickedObjc() {
         
         let pointIndex = 0
+        routeInfoForUI.pages[currentPageIndex].points?.remove(at: pointIndex)
+        
+        // 포인트에 대한 페이지가 '기존에 데이터'로 존재하는 경우
         if pages.count > currentPageIndex {
             let points = Array(pages[currentPageIndex].points as! Set<BodyPoint>)
             if points.count > pointIndex {
                 let removePointData = points[pointIndex]
-                removePoint.append((pages[currentPageIndex], removePointData))
+                removePointList.append((pages[currentPageIndex], removePointData))
             }
+        
+        // 포인트에 대한 페이지가 '추가될 데이터'로 존재하는 경우
         }  else {
             guard route != nil else { return }
-            let indices = newPageInfo.filter({ $0.rowOrder == routeInfo.pages[currentPageIndex].rowOrder}).indices
+            let indices = newPageInfo.filter({ $0.rowOrder == routeInfoForUI.pages[currentPageIndex].rowOrder}).indices
             if indices.count > 0 {
-                routeInfo.pages[currentPageIndex].points?.remove(at: pointIndex)
                 newPageInfo[indices[0]].points?.remove(at: pointIndex)
             }
         }
+        
     }
 }
 
 extension PageViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return routeInfo.pages.count
+        return routeInfoForUI.pages.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -234,7 +249,7 @@ extension PageViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
         let vc = BodyPointListViewController()
-        vc.pageInfo = routeInfo.pages[index]
+        vc.pageInfo = routeInfoForUI.pages[index]
         
         navigationController?.pushViewController(vc, animated: true)
         currentPageIndex = index
@@ -254,13 +269,13 @@ extension PageViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
         let index = indexPath.row
-        let removePageInfoData = routeInfo.pages[index]
+        let removePageInfoData = routeInfoForUI.pages[index]
         if route != nil && pages.count > index {
             let removePageData = pages[index]
-            removePage.append(removePageData)
+            removePageList.append(removePageData)
         }
         if editingStyle == .delete {
-            routeInfo.pages.remove(at: indexPath.row)
+            routeInfoForUI.pages.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             let indices = newPageInfo.filter({ $0.rowOrder == removePageInfoData.rowOrder}).indices
             if indices.count > 0 {

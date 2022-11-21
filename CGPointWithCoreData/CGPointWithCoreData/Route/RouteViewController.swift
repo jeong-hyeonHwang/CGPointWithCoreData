@@ -108,7 +108,7 @@ class RouteViewController: UIViewController {
 extension RouteViewController {
     @objc func addRouteButtonClicked() {
         let rootVC = PageViewController()
-        rootVC.routeInfo = RouteInfo(dataWrittenDate: Date(), gymName: "", problemLevel: 0, isChallengeComplete: false, pages: [PageInfo(rowOrder: 0, points: [])])
+        rootVC.routeInfoForUI = RouteInfo(dataWrittenDate: Date(), gymName: "", problemLevel: 0, isChallengeComplete: false, pages: [PageInfo(rowOrder: 0, points: [])])
         rootVC.isModalType = true
         rootVC.route = nil
         
@@ -165,7 +165,7 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
 //            let pointInfo = pointsArray.map { BodyPointInfo(footOrHand: FootOrHand(rawValue: $0.footOrHand) ?? FootOrHand.foot, isForce: $0.isForce, primaryPostion: $0.primaryPostion as! CGPoint, secondaryPositon: $0.secondaryPositon?)
 //            }
         }
-        vc.routeInfo = RouteInfo(dataWrittenDate: route.dataWrittenDate, gymName: route.gymName, problemLevel: Int(route.problemLevel), isChallengeComplete: route.isChallengeComplete, pages: pageInfo)
+        vc.routeInfoForUI = RouteInfo(dataWrittenDate: route.dataWrittenDate, gymName: route.gymName, problemLevel: Int(route.problemLevel), isChallengeComplete: route.isChallengeComplete, pages: pageInfo)
         vc.isModalType = false
         vc.route = route
         navigationController?.pushViewController(vc, animated: true)
