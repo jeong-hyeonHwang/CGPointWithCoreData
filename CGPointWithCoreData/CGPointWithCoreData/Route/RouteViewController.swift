@@ -142,7 +142,7 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
         var pointsNumStr = "POINTS NO ORDER\n[ "
         for i in 0..<pageNum {
             let pointsNum = pages[indices[i]].points?.count
-            pointsNumStr += " \(pointsNum)"
+            pointsNumStr += " \(String(describing: pointsNum))"
         }
         pointsNumStr += " ]"
         
@@ -174,4 +174,5 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50
     }
+    
 }
