@@ -8,12 +8,19 @@
 import UIKit
 
 class PageViewController: UIViewController {
-
+    
     var route: RouteFinding?
     var routeInfo: RouteInfo!
     var newPageInfo: [PageInfo] = []
-    var newPointInfo: [(page: Page,bodyPointInfo: [BodyPointInfo])] = []
+    var newPointInfo: [(page: Page, bodyPointInfo: [BodyPointInfo])] = []
+    var removePage: [Page] = []
+    var removePoint: [(Page, BodyPoint)] = []
     var isModalType: Bool!
+    private var pages: [Page] = []
+    
+    private var addPointMode: Bool = true
+    
+    private var currentPageIndex: Int = 0
     
     private lazy var pageTableView = {
         let view = UITableView()
@@ -33,7 +40,7 @@ class PageViewController: UIViewController {
         button.setTitle("ADD PAGE", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.layer.backgroundColor = UIColor.yellow.cgColor
-    
+        
         return button
     }()
     
@@ -42,12 +49,25 @@ class PageViewController: UIViewController {
         button.setTitle("SAVE ROUTE", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.layer.backgroundColor = UIColor.yellow.cgColor
+        
+        return button
+    }()
     
+    private lazy var removePointButton = {
+        let button = UIButton()
+        button.setTitle("REMOVE POINT", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.layer.backgroundColor = UIColor.blue.cgColor
+        
         return button
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if route != nil {
+            pages = Array(route?.pages as! Set<Page>)
+        }
         
         layoutConfigure()
         componentConfigure()
@@ -55,13 +75,13 @@ class PageViewController: UIViewController {
     }
     
     func layoutConfigure() {
-        [pageTableView, seperatorView, addPageButton, saveRouteButton].forEach({
+        [pageTableView, seperatorView, addPageButton, saveRouteButton, removePointButton].forEach({
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         })
         
         let safeArea = view.safeAreaLayoutGuide
-
+        
         let margin: CGFloat = 16
         let buttonHeight: CGFloat = 50
         
@@ -80,6 +100,13 @@ class PageViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
+            removePointButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: margin),
+            removePointButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -margin),
+            removePointButton.bottomAnchor.constraint(equalTo: addPageButton.topAnchor, constant: -margin),
+            removePointButton.heightAnchor.constraint(equalToConstant: buttonHeight)
+        ])
+        
+        NSLayoutConstraint.activate([
             seperatorView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             seperatorView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             seperatorView.bottomAnchor.constraint(equalTo: addPageButton.topAnchor, constant: -margin),
@@ -94,14 +121,14 @@ class PageViewController: UIViewController {
             pageTableView.bottomAnchor.constraint(equalTo: seperatorView.topAnchor, constant: -margin)
         ])
         
-
+        
     }
     
     func componentConfigure() {
         pageTableView.delegate = self
         pageTableView.dataSource = self
         pageTableView.register(PageTableViewCell.self,
-                      forCellReuseIdentifier: PageTableViewCell.identifier)
+                               forCellReuseIdentifier: PageTableViewCell.identifier)
         
         view.backgroundColor = .black
         pageTableView.backgroundColor = .black
@@ -109,6 +136,8 @@ class PageViewController: UIViewController {
         addPageButton.addTarget(self, action: #selector(addPageButtonClicked), for: .touchUpInside)
         
         saveRouteButton.addTarget(self, action: #selector(saveRouteButtonClicked), for: .touchUpInside)
+        
+        removePointButton.addTarget(self, action: #selector(removeBodyPoitButtonClickedObjc), for: .touchUpInside)
     }
     
     func navigationBarConfigure() {
@@ -131,6 +160,13 @@ extension PageViewController {
         } else {
             DataManager.shared.updatePageData(pageInfo: newPageInfo, routeFinding: route!)
             DataManager.shared.updatePointData(pointInfo: newPointInfo)
+            if let route = route {
+                DataManager.shared.removePagesData(pages: removePage, routeFinding: route)
+                for temp in removePoint
+                {
+                    DataManager.shared.removePointsData(points: [temp.1], page: temp.0)
+                }
+            }
             navigationController?.popViewController(animated: true)
         }
     }
@@ -138,14 +174,46 @@ extension PageViewController {
     func addBodyPointButtonClicked(index: Int) {
         let point = BodyPointInfo(footOrHand: FootOrHand.foot, isForce: false, primaryPostion: CGPoint(x: 0, y: 0), secondaryPositon: nil)
         routeInfo.pages[index].points?.append(point)
-
+        
         guard route != nil else { return }
-        let pages = Array(route?.pages as! Set<Page>)
         let indices = newPageInfo.filter({ $0.rowOrder == routeInfo.pages[index].rowOrder}).indices
         if indices.count > 0 {
             newPageInfo[indices[0]].points?.append(point)
         } else {
             newPointInfo.append((page: pages[index], bodyPointInfo: [point]))
+        }
+    }
+    
+    func removeBodyPointButtonClicked(pageIndex: Int, pointIndex: Int) {
+        
+        let points = Array(pages[pageIndex].points as! Set<BodyPoint>)
+        if points.count > pointIndex {
+            let removePointData = points[pointIndex]
+            removePoint.append((pages[pageIndex], removePointData))
+        } else {
+            let indices = newPointInfo.filter({ $0.page.rowOrder == pages[pageIndex].rowOrder}).indices
+            if indices.count > 0 {
+                newPointInfo.remove(at: indices[0])
+            }
+        }
+    }
+    
+    @objc func removeBodyPoitButtonClickedObjc() {
+        
+        let pointIndex = 0
+        if pages.count > currentPageIndex {
+            let points = Array(pages[currentPageIndex].points as! Set<BodyPoint>)
+            if points.count > pointIndex {
+                let removePointData = points[pointIndex]
+                removePoint.append((pages[currentPageIndex], removePointData))
+            }
+        }  else {
+            guard route != nil else { return }
+            let indices = newPageInfo.filter({ $0.rowOrder == routeInfo.pages[currentPageIndex].rowOrder}).indices
+            if indices.count > 0 {
+                routeInfo.pages[currentPageIndex].points?.remove(at: pointIndex)
+                newPageInfo[indices[0]].points?.remove(at: pointIndex)
+            }
         }
     }
 }
@@ -160,7 +228,6 @@ extension PageViewController: UITableViewDelegate, UITableViewDataSource {
         
         let index = indexPath.row
         cell.numberLabel.text = "PAGE \(index)"
-//        CoreDataManager.shared.readPageData(routeFinding: routeFinding)[index]
         return cell
     }
     
@@ -170,6 +237,8 @@ extension PageViewController: UITableViewDelegate, UITableViewDataSource {
         vc.pageInfo = routeInfo.pages[index]
         
         navigationController?.pushViewController(vc, animated: true)
+        currentPageIndex = index
+        print("CURRENT PAGE INDEX IS \(currentPageIndex)")
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -179,5 +248,24 @@ extension PageViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         let index = indexPath.row
         addBodyPointButtonClicked(index: index)
+//        removeBodyPointButtonClicked(pageIndex: index, pointIndex: 0)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        let index = indexPath.row
+        let removePageInfoData = routeInfo.pages[index]
+        if route != nil && pages.count > index {
+            let removePageData = pages[index]
+            removePage.append(removePageData)
+        }
+        if editingStyle == .delete {
+            routeInfo.pages.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            let indices = newPageInfo.filter({ $0.rowOrder == removePageInfoData.rowOrder}).indices
+            if indices.count > 0 {
+                newPageInfo.remove(at: indices[0])
+            }
+        }
     }
 }
