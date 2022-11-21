@@ -4,7 +4,7 @@
         <attribute name="footOrHand" optional="YES" attributeType="String"/>
         <attribute name="isForce" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="primaryPostion" optional="YES" attributeType="Transformable"/>
-        <attribute name="secondaryPositon" optional="YES" attributeType="Transformable"/>
+        <attribute name="secondaryPosition" optional="YES" attributeType="Transformable"/>
         <relationship name="page" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Page" inverseName="points" inverseEntity="Page"/>
     </entity>
     <entity name="Page" representedClassName="Page" syncable="YES">

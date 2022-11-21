@@ -45,12 +45,14 @@ class RouteViewController: UIViewController {
     }()
     
     override func viewDidLoad() {
+//        DataManager.shared.deleteAllData()
         layoutConfigure()
         navigationBarConfigure()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        routeList = DataManager.shared.getRouteFindingList()
+        print("HIII")
+//        routeList = DataManager.shared.getRouteFindingList()
         routeTableView.reloadData()
     }
     
@@ -123,20 +125,20 @@ extension RouteViewController {
 
 extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return routeList.count
+        return DataManager.shared.getRouteFindingList().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RouteTableViewCell", for: indexPath) as! RouteTableViewCell
         
         let index = indexPath.row
-        cell.labelConfigure(routeInfo: routeList[index])
+        cell.labelConfigure(routeInfo: DataManager.shared.getRouteFindingList()[index])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
-        let route = routeList[index]
+        let route = DataManager.shared.getRouteFindingList()[index]
         let pages = route.pages as! Set<Page>
         let pageNum = pages.count
         let indices = pages.indices.map{$0}
@@ -182,9 +184,10 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
         if editingStyle == .delete {
             print(indexPath)
             let index = indexPath.row
-            DataManager.shared.deleteRouteData(route: routeList[index])
-            routeList.remove(at: index)
+//            DataManager.shared.getRouteFindingList().remove(at: index)
+            DataManager.shared.deleteRouteData(route: DataManager.shared.getRouteFindingList()[index])
             tableView.deleteRows(at: [indexPath], with: .fade)
+            
         }
     }
 }

@@ -34,13 +34,16 @@ final class DataManager {
     }
 
     func updatePageData(pageInfo: [PageInfo], routeFinding: RouteFinding) {
+        print(pageInfo.count)
         for info in pageInfo {
+            print("HERE --- ")
             coreDataDAO.createPageData(pageInfo: info, routeFinding: routeFinding)
         }
     }
     
     func updatePointData(pointInfo: [Page : [BodyPointInfo]]) {
         for (key, value) in pointInfo {
+            print("hi")
             coreDataDAO.createPointData(bodyPointInfo: value, page: key)
         }
     }
@@ -55,6 +58,10 @@ final class DataManager {
     
     func deleteRouteData(route: RouteFinding) {
         coreDataDAO.deleteRouteFindingData(routeFinding: route)
+        let indices = routeFindingList.filter({ $0 == route }).indices
+        if indices.count > 0 {
+            routeFindingList.remove(at: indices[0])
+        }
     }
     
     func saveData() {

@@ -2,7 +2,7 @@
 //  RouteFinding+CoreDataProperties.swift
 //  CGPointWithCoreData
 //
-//  Created by 황정현 on 2022/11/19.
+//  Created by 황정현 on 2022/11/22.
 //
 //
 
@@ -21,7 +21,7 @@ extension RouteFinding {
     @NSManaged public var id: UUID?
     @NSManaged public var isChallengeComplete: Bool
     @NSManaged public var problemLevel: Int16
-    @NSManaged public var pages: NSSet?
+    @NSManaged public var pages: NSSet
 
 }
 

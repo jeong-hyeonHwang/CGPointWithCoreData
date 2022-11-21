@@ -210,15 +210,16 @@ extension PageViewController {
         
         // 페이지가 '추가될 데이터'에 존재하는 경우
         if indices.count > 0 {
-            print("HEERE")
             newPageInfo[indices[0]].points?.append(point)
-            print(newPageInfo[indices[0]].points?.count)
+            print("111::: ", newPageInfo[indices[0]].points?.count)
         
         // 페이지가 '기존의 데이터'에 존재하는 경우
         } else {
-            print("NOOOOO")
+            if newPointInfo[pages[index]] == nil {
+                newPointInfo[pages[index]] = []
+            }
             newPointInfo[pages[index]]?.append(point)
-//            print(newPointInfo[pages[index]].count)
+            print(newPointInfo[pages[index]]?.count)
         }
     }
     
@@ -232,6 +233,9 @@ extension PageViewController {
             let points = Array(pages[currentPageIndex].points as! Set<BodyPoint>)
             if points.count > pointIndex {
                 let removePointData = points[pointIndex]
+                if removePointList[pages[currentPageIndex]] == nil {
+                    removePointList[pages[currentPageIndex]] = []
+                }
                 removePointList[pages[currentPageIndex]]?.append(removePointData)
             }
         
@@ -248,7 +252,7 @@ extension PageViewController {
     
     func updatePointData(index: Int, before: BodyPoint, afterPoint: BodyPointInfo) {
         
-        let beforePoint = BodyPointInfo(footOrHand: FootOrHand(rawValue: before.footOrHand) ?? FootOrHand.foot, isForce: before.isForce, primaryPostion: before.primaryPostion as! CGPoint, secondaryPosition: before.secondaryPosition as! CGPoint)
+        let beforePoint = BodyPointInfo(footOrHand: FootOrHand(rawValue: before.footOrHand) ?? FootOrHand.foot, isForce: before.isForce, primaryPostion: before.primaryPostion as! CGPoint, secondaryPosition: before.secondaryPosition as? CGPoint)
         guard route != nil else { return }
         let indices = newPageInfo.filter({ $0.rowOrder == routeInfoForUI.pages[index].rowOrder}).indices
         // 페이지가 '추가될 데이터'에 존재하는 경우

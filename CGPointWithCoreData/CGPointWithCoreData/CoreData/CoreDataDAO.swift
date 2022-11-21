@@ -44,9 +44,8 @@ class CoreDataDAO {
         if pageInfo.points?.count == 0 {
             print("THERE's NO POINT..")
         } else {
-            pageInfo.points?.forEach({ bodyPointInfo in
-//                createPointData(bodyPointInfo: bodyPointInfo, page: page)
-            })
+            guard let points = pageInfo.points else { return }
+            createPointData(bodyPointInfo: points, page: page)
         }
     }
     
