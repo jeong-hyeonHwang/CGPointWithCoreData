@@ -34,7 +34,6 @@ class BodyPointListViewController: UIViewController {
         let safeArea = view.safeAreaLayoutGuide
 
         let margin: CGFloat = 16
-        let buttonHeight: CGFloat = 50
         
         NSLayoutConstraint.activate([
             bodyPointTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
