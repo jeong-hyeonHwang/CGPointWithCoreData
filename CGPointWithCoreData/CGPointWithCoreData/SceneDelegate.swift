@@ -29,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not necessarily discarded (see `application:didDiscardSceneSessions` instead).
         
-        CoreDataManager.shared.saveData()
+        DataManager.shared.saveData()
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
