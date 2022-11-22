@@ -225,11 +225,19 @@ extension PageViewController {
     
     @objc func removeBodyPointButtonClickedObjc() {
         
-        let pointIndex = 0
-        routeInfoForUI.pages[currentPageIndex].points?.remove(at: pointIndex)
+        guard let points = routeInfoForUI.pages[currentPageIndex].points else { return }
+        if points.count == 0 {
+            print("THERE's NO POINT...")
+            return }
+        let pointIndex = Int.random(in: 0..<points.count)
+        print("POINT INDEX ", pointIndex)
+        if points.count > 0 {
+            routeInfoForUI.pages[currentPageIndex].points?.remove(at: pointIndex)
+        }
         
         // 포인트에 대한 페이지가 '기존에 데이터'로 존재하는 경우
         if pages.count > currentPageIndex {
+            print("기존 데이터입니다.")
             let points = Array(pages[currentPageIndex].points as! Set<BodyPoint>)
             if points.count > pointIndex {
                 let removePointData = points[pointIndex]
@@ -241,6 +249,7 @@ extension PageViewController {
         
         // 포인트에 대한 페이지가 '추가될 데이터'로 존재하는 경우
         }  else {
+            print("추가될 데이터입니다.")
             guard route != nil else { return }
             let indices = newPageInfo.filter({ $0.rowOrder == routeInfoForUI.pages[currentPageIndex].rowOrder}).indices
             if indices.count > 0 {
