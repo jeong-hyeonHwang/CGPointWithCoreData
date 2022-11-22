@@ -18,9 +18,12 @@ extension BodyPoint {
 
     @NSManaged public var footOrHand: String
     @NSManaged public var isForce: Bool
-    @NSManaged public var primaryPostion: NSObject
-    @NSManaged public var secondaryPosition: NSObject?
-    @NSManaged public var page: Page
+    @NSManaged public var primaryXCoordinate: Double
+    @NSManaged public var primaryYCoordinate: Double
+    @NSManaged public var secondaryXCoordinate: Double
+    @NSManaged public var secondaryYCoordinate: Double
+    @NSManaged public var id: UUID?
+    @NSManaged public var page: Page?
 
 }
 

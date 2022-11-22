@@ -21,7 +21,7 @@ extension RouteFinding {
     @NSManaged public var id: UUID?
     @NSManaged public var isChallengeComplete: Bool
     @NSManaged public var problemLevel: Int16
-    @NSManaged public var pages: NSSet
+    @NSManaged public var pages: NSSet?
 
 }
 

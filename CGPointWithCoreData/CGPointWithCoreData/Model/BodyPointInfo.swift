@@ -10,6 +10,6 @@ import Foundation
 struct BodyPointInfo: Equatable {
     var footOrHand: FootOrHand
     var isForce: Bool
-    var primaryPostion: CGPoint
-    var secondaryPosition: CGPoint?
+    var primaryPosition: CGPoint
+    var secondaryPosition: CGPoint
 }

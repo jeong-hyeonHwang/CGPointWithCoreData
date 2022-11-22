@@ -190,7 +190,7 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
             let pointsArray = Array(pageArray[i].points as! Set<BodyPoint>)
             var pointInfo: [BodyPointInfo] = []
             for j in 0..<pointsArray.count {
-                let temp = BodyPointInfo(footOrHand: FootOrHand(rawValue: pointsArray[j].footOrHand) ?? FootOrHand.hand, isForce: pointsArray[j].isForce, primaryPostion: pointsArray[j].primaryPostion as! CGPoint, secondaryPosition: pointsArray[j].secondaryPosition as? CGPoint)
+                let temp = BodyPointInfo(footOrHand: FootOrHand(rawValue: pointsArray[j].footOrHand) ?? FootOrHand.hand, isForce: pointsArray[j].isForce, primaryPosition: CGPoint(x: pointsArray[j].primaryXCoordinate, y: pointsArray[j].primaryYCoordinate), secondaryPosition: CGPoint(x: pointsArray[j].secondaryXCoordinate, y: pointsArray[j].secondaryYCoordinate))
                 pointInfo.append(temp)
             }
             points2dimensionArray.append(pointInfo)
