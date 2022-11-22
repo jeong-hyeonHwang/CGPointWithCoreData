@@ -71,7 +71,6 @@ extension BodyPointListViewController: UITableViewDelegate, UITableViewDataSourc
         
         let index = indexPath.row
         cell.numberLabel.text = "POINT \(pageInfo.points?[index].primaryPosition)"
-        //        CoreDataManager.shared.readPageData(routeFinding: routeFinding)[index]
         return cell
     }
     

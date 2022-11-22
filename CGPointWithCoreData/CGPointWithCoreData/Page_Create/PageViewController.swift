@@ -24,7 +24,9 @@ class PageViewController: UIViewController {
     // 새롭게 추가할 Point에 대한 배열
     var newPointInfo: [Page : [BodyPointInfo]] = [:]
     
+    // 기존에 존재하는 Page의 Point 데이터 중 삭제할 Point에 대한 배열
     var updatePointInfo: [Page: [(BodyPoint, BodyPointInfo)]] = [:]
+    
     // 기존에 존재하는 데이터 중 삭제할 Page에 대한 배열
     var removePageList: [Page] = []
     
@@ -183,13 +185,18 @@ class PageViewController: UIViewController {
 }
 
 extension PageViewController {
+    
+    // MARK: CREATE PAGE
     @objc func addPageButtonClicked() {
         let pageInfo = PageInfo(rowOrder: routeInfoForUI.pages.count , points: [])
+        
         routeInfoForUI.pages.append(pageInfo)
         newPageInfo.append(pageInfo)
+        
         pageTableView.reloadData()
     }
     
+    // MARK: SAVE DATA(ROUTE)
     @objc func saveRouteButtonClicked() {
         if isModalType {
             DataManager.shared.addRoute(routeInfo: routeInfoForUI)
@@ -197,14 +204,20 @@ extension PageViewController {
         } else {
             if let route = route {
                 
-                // 기존 데이터에 페이지 및 포인트 추가
+                // CREATE & UPDATE
+                // 기존 데이터에 새로운 페이지(+ 하위의 새로운 포인트) 추가
                 DataManager.shared.updatePageData(pageInfo: newPageInfo, routeFinding: route)
+                // 기존 데이터, 기존 페이지에 새로운 포인트 추가
                 DataManager.shared.updatePointData(pointInfo: newPointInfo)
                 
-                // 기존 데이터에 페이지 및 포인트 제거
+                // DELETE
+                // 기존 데이터의 페이지 제거
                 DataManager.shared.deletePagesData(pages: removePageList, routeFinding: route)
+                //  기존 데이터, 기존 페이지에 존재하는 포인트 제거
                 DataManager.shared.deletePointsData(removePointList: removePointList)
                 
+                // UPDATE
+                // 기존 데이터, 기존 페이지에 존재하는 포인트 수정
                 if updatePointInfo.isEmpty == false {
                     DataManager.shared.revisePointData(pointInfo: updatePointInfo)
                 }
@@ -213,20 +226,19 @@ extension PageViewController {
         }
     }
     
+    // MARK: CREATE POINT
     func addBodyPointButtonClicked(index: Int) {
         
-        print("HEEEEEE")
         let point = BodyPointInfo(footOrHand: FootOrHand.foot, isForce: false, primaryPosition: CGPoint(x: 0, y: 0), secondaryPosition: CGPoint(x:0, y:0))
         routeInfoForUI.pages[index].points?.append(point)
         
+        // UI를 구성하는 데이터에 추가
         guard route != nil else { return }
         let indices = newPageInfo.filter({ $0.rowOrder == routeInfoForUI.pages[index].rowOrder}).indices
         
         // 페이지가 '추가될 데이터'에 존재하는 경우
-        print("COUNT ", indices.count)
         if indices.count > 0 {
             newPageInfo[indices[0]].points?.append(point)
-            print("111::: ", newPageInfo[indices[0]].points?.count)
         
         // 페이지가 '기존의 데이터'에 존재하는 경우
         } else {
@@ -238,14 +250,13 @@ extension PageViewController {
         }
     }
     
+    // MARK: DELETE POINT
     @objc func removeBodyPointButtonClickedObjc() {
         
+        // UI를 구성하는 데이터에서 삭제
         guard let points = routeInfoForUI.pages[currentPageIndex].points else { return }
-        if points.count == 0 {
-            print("THERE's NO POINT...")
-            return }
+        if points.count == 0 { return }
         let pointIndex = Int.random(in: 0..<points.count)
-        print("POINT INDEX ", pointIndex)
         if points.count > 0 {
             routeInfoForUI.pages[currentPageIndex].points?.remove(at: pointIndex)
         }
@@ -274,54 +285,41 @@ extension PageViewController {
         }
     }
     
+    // MARK: UPDATE POINT
     @objc func updatePointDataObjc() {
-        print("UPDATE POINT DATA!!!")
+        
         let pageIndex = 0
         let page = routeInfoForUI.pages[pageIndex]
-        
         let before: BodyPointInfo = routeInfoForUI.pages[pageIndex].points![0]
         let afterPoint: BodyPointInfo = BodyPointInfo(footOrHand: FootOrHand.foot, isForce: true, primaryPosition: CGPoint(x: 3, y: 3), secondaryPosition: CGPoint(x: 4, y: 4))
         
         // 기존 Page인가?
         if pages.filter({$0.rowOrder == page.rowOrder}).count > 0 {
-            print("기존 페이지입니다.")
 
             let points = Array(pages[pageIndex].points as! Set<BodyPoint>)
             let point = points.filter({ CGPoint(x: $0.primaryXCoordinate, y: $0.primaryYCoordinate) == before.primaryPosition })
             
             // 기존 Page에 존재하는 기존 Point
             if point.count > 0 {
-                print("기존에 존재하는 Point입니다.")
                 if updatePointInfo[pages[pageIndex]] == nil {
                     updatePointInfo[pages[pageIndex]] = []
                 }
                 updatePointInfo[pages[pageIndex]]?.append((point[0], afterPoint))
             } else {
-                print("기존에 존재하지 않는 Point입니다.")
                 guard let indices = newPointInfo[pages[pageIndex]]?.filter({$0 == before}).indices else { return }
-                
-                
-                print("BEFORE \(newPointInfo[pages[pageIndex]]?[indices[0]].primaryPosition)")
+   
                 newPointInfo[pages[pageIndex]]?[indices[0]] = afterPoint
-                print("AFTER \(newPointInfo[pages[pageIndex]]?[indices[0]].primaryPosition)")
             }
-            
-            
         } else {
             print("기존에 존재하지 않는 페이지입니다.")
             let indices = newPageInfo.filter({ $0.rowOrder == page.rowOrder }).indices
             if indices.count > 0 {
                 guard let pointIndices = newPageInfo[indices[0]].points?.filter({ $0 == before }).indices else { return }
-                print("BEFORE \(newPageInfo[indices[0]].points?[pointIndices[0]].primaryPosition)")
                 newPageInfo[indices[0]].points?[pointIndices[0]] = afterPoint
-                print("AFTER \(newPageInfo[indices[0]].points?[pointIndices[0]].primaryPosition)")
             }
         }
         
-        
-        
-        
-        // UI에서, '보이는 영역'에 대한 업데이트
+        // UI를 구성하는 데이터에서 업데이트(수정)
         guard let routeInfoForUIIndex = routeInfoForUI.pages[pageIndex].points?.firstIndex(of: before) else { return }
         routeInfoForUI.pages[pageIndex].points?[routeInfoForUIIndex] = afterPoint
         
@@ -349,7 +347,6 @@ extension PageViewController: UITableViewDelegate, UITableViewDataSource {
         
         navigationController?.pushViewController(vc, animated: true)
         currentPageIndex = index
-        print("CURRENT PAGE INDEX IS \(currentPageIndex)")
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
