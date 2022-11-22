@@ -28,16 +28,18 @@ final class DataManager {
         return routeFindingList
     }
     
+    // MARK: CREATE ROUTE
     func addRoute(routeInfo: RouteInfo) {
         let routeFinding = coreDataDAO.createRouteFindingData(routeInfo: routeInfo) as! RouteFinding
-        print("lllll ", routeFinding.dataWrittenDate)
         routeFindingList.append(routeFinding)
     }
 
+    // MARK: UPDATE ROUTE
     func updateRoute(routeInfo: RouteInfo, route: RouteFinding) {
         coreDataDAO.updateRoute(routeInfo: routeInfo, route: route)
     }
     
+    // MARK: CREATE PAGE
     func updatePageData(pageInfo: [PageInfo], routeFinding: RouteFinding) {
         print(pageInfo.count)
         for info in pageInfo {
@@ -46,6 +48,7 @@ final class DataManager {
         }
     }
     
+    // MARK: CREATE POINT 포인트 추가
     func updatePointData(pointInfo: [Page : [BodyPointInfo]]) {
         for (key, value) in pointInfo {
             print("hi")
@@ -53,6 +56,7 @@ final class DataManager {
         }
     }
     
+    // MARK: UPDATE POINT 기존에 존재하는 포인트를 수정
     func revisePointData(pointInfo: [Page : [(BodyPoint, BodyPointInfo)]]) {
         for (key, value) in pointInfo {
             for pointData in value {
@@ -62,19 +66,24 @@ final class DataManager {
         coreDataDAO.saveData()
     }
     
-    func deletePagesData(pages: [Page], routeFinding: RouteFinding) {
-        coreDataDAO.deletePageData(pages: pages, routeFinding: routeFinding)
-    }
-    
-    func deletePointsData(removePointList: [Page : [BodyPoint]]) {
-        coreDataDAO.deletePointData(removePointList: removePointList)
-    }
-    
+    // MARK: DELETE ROUTE
     func deleteRouteData(route: RouteFinding) {
         coreDataDAO.deleteRouteFindingData(routeFinding: route)
         guard let index = routeFindingList.firstIndex(of: route) else { return }
         routeFindingList.remove(at: index)
     }
+    
+    // MARK: DELETE PAGE
+    func deletePagesData(pages: [Page], routeFinding: RouteFinding) {
+        coreDataDAO.deletePageData(pages: pages, routeFinding: routeFinding)
+    }
+    
+    // MARK: DELETE POINT
+    func deletePointsData(removePointList: [Page : [BodyPoint]]) {
+        coreDataDAO.deletePointData(removePointList: removePointList)
+    }
+    
+    
     
     func saveData() {
         coreDataDAO.saveData()
