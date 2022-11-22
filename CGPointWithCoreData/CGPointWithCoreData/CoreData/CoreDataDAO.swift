@@ -68,16 +68,15 @@ class CoreDataDAO {
     
     func createPointData(bodyPointInfo: [BodyPointInfo], page: Page) {
         for info in bodyPointInfo {
+            print(info)
             let bodyPoint = BodyPoint(context: context)
+            bodyPoint.id = UUID()
             bodyPoint.footOrHand = info.footOrHand.rawValue
             bodyPoint.isForce = info.isForce
-            bodyPoint.primaryPostion = info.primaryPostion as NSObject
-            
-            if let secondaryPoint = info.secondaryPosition {
-                bodyPoint.secondaryPosition = secondaryPoint as NSObject
-            } else {
-                bodyPoint.secondaryPosition = nil
-            }
+            bodyPoint.primaryXCoordinate = info.primaryPosition.x
+            bodyPoint.primaryYCoordinate = info.primaryPosition.y
+            bodyPoint.secondaryXCoordinate = info.secondaryPosition.x
+            bodyPoint.secondaryYCoordinate = info.secondaryPosition.y
             
             page.addToPoints(bodyPoint)
         }
@@ -114,23 +113,24 @@ class CoreDataDAO {
         return information
     }
     
-    func updatePointData(pointData: [Page : [(BodyPoint, BodyPointInfo)]]) {
+    func updatePointData(page: Page, targetPoint: BodyPoint, data: BodyPointInfo) {
+        guard let id = targetPoint.id else { return }
         let request = BodyPoint.fetchRequest()
-        for (key, value) in pointData {
-            request.predicate = NSPredicate(format: "page = %@", key)
-            do {
-                let information = try context.fetch(request)
-//                if information.count > 0 {
-//                    for info in information {
-//                        info.setValue(
-//                    }
-//                }
-//                if let tempInfo = info.first {
-////                    tempInfo.setValue(value)
-//                }
-            } catch {
-                print("CoreDataDAO UpdateFeedback Method \(error.localizedDescription)")
-            }
+        request.predicate = NSPredicate(format: "id = %@",  id as CVarArg)
+        do {
+            let info = try context.fetch(request)
+                if let tempInfo = info.first {
+                    print("SUCCEEDD")
+                    tempInfo.primaryXCoordinate = data.primaryPosition.x
+                    tempInfo.primaryYCoordinate = data.primaryPosition.y
+                    tempInfo.secondaryXCoordinate = data.secondaryPosition.x
+                    tempInfo.secondaryYCoordinate = data.secondaryPosition.y
+                    tempInfo.setValue(data.isForce, forKey: "isForce")
+                    tempInfo.setValue(data.footOrHand.rawValue, forKey: "footOrHand")
+                    print(tempInfo)
+                } else { print("NO")}
+        } catch {
+            print("CoreDataDAO UpdatePointData Method \(error.localizedDescription)")
         }
     }
     // 단일 데이터 삭제를 위한 메소드
