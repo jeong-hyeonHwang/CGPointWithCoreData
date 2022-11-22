@@ -208,7 +208,7 @@ extension PageViewController {
                 // 기존 데이터에 새로운 페이지(+ 하위의 새로운 포인트) 추가
                 DataManager.shared.updatePageData(pageInfo: newPageInfo, routeFinding: route)
                 // 기존 데이터, 기존 페이지에 새로운 포인트 추가
-                DataManager.shared.updatePointData(pointInfo: newPointInfo)
+                DataManager.shared.addPointData(pointInfo: newPointInfo)
                 
                 // DELETE
                 // 기존 데이터의 페이지 제거
@@ -219,7 +219,7 @@ extension PageViewController {
                 // UPDATE
                 // 기존 데이터, 기존 페이지에 존재하는 포인트 수정
                 if updatePointInfo.isEmpty == false {
-                    DataManager.shared.revisePointData(pointInfo: updatePointInfo)
+                    DataManager.shared.updatePointData(pointInfo: updatePointInfo)
                 }
             }
             navigationController?.popViewController(animated: true)

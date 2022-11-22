@@ -49,7 +49,7 @@ final class DataManager {
     }
     
     // MARK: CREATE POINT 포인트 추가
-    func updatePointData(pointInfo: [Page : [BodyPointInfo]]) {
+    func addPointData(pointInfo: [Page : [BodyPointInfo]]) {
         for (key, value) in pointInfo {
             print("hi")
             coreDataDAO.createPointData(bodyPointInfo: value, page: key)
@@ -57,7 +57,7 @@ final class DataManager {
     }
     
     // MARK: UPDATE POINT 기존에 존재하는 포인트를 수정
-    func revisePointData(pointInfo: [Page : [(BodyPoint, BodyPointInfo)]]) {
+    func updatePointData(pointInfo: [Page : [(BodyPoint, BodyPointInfo)]]) {
         for (key, value) in pointInfo {
             for pointData in value {
                 coreDataDAO.updatePointData(page: key, targetPoint: pointData.0, data: pointData.1)
