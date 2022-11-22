@@ -14,7 +14,6 @@ final class DataManager {
     
     private var coreDataDAO: CoreDataDAO
     private var routeFindingList: [RouteFinding] = []
-    
     init() {
         coreDataDAO = CoreDataDAO()
         updateRepository()
@@ -52,6 +51,15 @@ final class DataManager {
             print("hi")
             coreDataDAO.createPointData(bodyPointInfo: value, page: key)
         }
+    }
+    
+    func revisePointData(pointInfo: [Page : [(BodyPoint, BodyPointInfo)]]) {
+        for (key, value) in pointInfo {
+            for pointData in value {
+                coreDataDAO.updatePointData(page: key, targetPoint: pointData.0, data: pointData.1)
+            }
+        }
+        coreDataDAO.saveData()
     }
     
     func deletePagesData(pages: [Page], routeFinding: RouteFinding) {
