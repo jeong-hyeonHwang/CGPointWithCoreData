@@ -10,7 +10,7 @@ import UIKit
 class RouteViewController: UIViewController {
     
     private var routeList: [RouteFinding] = DataManager.shared.getRouteFindingList()
-    
+
     private lazy var routeTableView = {
         let view = UITableView()
         
@@ -40,8 +40,18 @@ class RouteViewController: UIViewController {
         return label
     }()
     
+    private lazy var routeInfoUpdateButton = {
+        let button = UIButton()
+        button.setTitle("Route Info Update", for: .normal)
+        button.setTitleColor(.yellow, for: .normal)
+        button.backgroundColor = .black
+        button.layer.cornerRadius = 16
+        return button
+    }()
+    
     override func viewDidLoad() {
         layoutConfigure()
+        componentConfigure()
         navigationBarConfigure()
     }
     
@@ -51,7 +61,7 @@ class RouteViewController: UIViewController {
     }
     
     func layoutConfigure() {
-        [routeTableView, routeInfoView].forEach({
+        [routeTableView, routeInfoView, routeInfoUpdateButton].forEach({
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         })
@@ -65,16 +75,23 @@ class RouteViewController: UIViewController {
         let margin: CGFloat = 16
         
         NSLayoutConstraint.activate([
+            routeInfoUpdateButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: margin),
+            routeInfoUpdateButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -margin),
+            routeInfoUpdateButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -margin),
+            routeInfoUpdateButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        NSLayoutConstraint.activate([
             routeInfoView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             routeInfoView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            routeInfoView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            routeInfoView.bottomAnchor.constraint(equalTo: routeInfoUpdateButton.topAnchor, constant: -margin),
             routeInfoView.heightAnchor.constraint(equalToConstant: 200)
         ])
         
         NSLayoutConstraint.activate([
             pointsNumberLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: margin),
             pointsNumberLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -margin),
-            pointsNumberLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            pointsNumberLabel.bottomAnchor.constraint(equalTo: routeInfoView.bottomAnchor),
             pointsNumberLabel.heightAnchor.constraint(equalToConstant: 72)
         ])
         
@@ -98,6 +115,10 @@ class RouteViewController: UIViewController {
                                 forCellReuseIdentifier: RouteTableViewCell.identifier)
     }
     
+    func componentConfigure() {
+        routeInfoUpdateButton.addTarget(self, action: #selector(routeInfoUpdateButtonClicked), for: .touchUpInside)
+    }
+    
     func navigationBarConfigure() {
         self.navigationItem.title = "ROUTE VC"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addRouteButtonClicked))
@@ -114,6 +135,19 @@ extension RouteViewController {
         let modalTypeNavigationVC = UINavigationController(rootViewController: rootVC)
         modalTypeNavigationVC.modalPresentationStyle = .fullScreen
         self.present(modalTypeNavigationVC, animated: true, completion: nil)
+    }
+    
+    @objc func routeInfoUpdateButtonClicked() {
+        if routeList.count > 0 {
+            let index = Int.random(in: 0..<routeList.count)
+            
+            let tempRouteInfo = RouteInfo(dataWrittenDate: Date.randomBetween(start: Date(timeIntervalSince1970: 100000), end: Date(timeIntervalSince1970: 200000)), gymName: "클라라", problemLevel: 5, isChallengeComplete: true, pages: [])
+            DataManager.shared.updateRoute(routeInfo: tempRouteInfo, route: routeList[index])
+            
+            print("ROUTE INFO UPDATE!")
+            routeTableView.reloadData()
+        }
+
     }
 }
 

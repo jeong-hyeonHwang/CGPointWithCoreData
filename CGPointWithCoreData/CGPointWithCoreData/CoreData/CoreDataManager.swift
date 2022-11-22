@@ -14,6 +14,7 @@ final class DataManager {
     
     private var coreDataDAO: CoreDataDAO
     private var routeFindingList: [RouteFinding] = []
+    
     init() {
         coreDataDAO = CoreDataDAO()
         updateRepository()
@@ -34,6 +35,10 @@ final class DataManager {
         routeFindingList.append(routeFinding)
     }
 
+    func updateRoute(routeInfo: RouteInfo, route: RouteFinding) {
+        coreDataDAO.updateRoute(routeInfo: routeInfo, route: route)
+    }
+    
     func updatePageData(pageInfo: [PageInfo], routeFinding: RouteFinding) {
         print(pageInfo.count)
         for info in pageInfo {

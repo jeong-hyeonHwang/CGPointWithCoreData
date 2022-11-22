@@ -35,6 +35,24 @@ class CoreDataDAO {
         return routeFinding
     }
     
+    func updateRoute(routeInfo: RouteInfo, route: RouteFinding) {
+        guard let id = route.id else { return }
+        let request = RouteFinding.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        do {
+            let info = try context.fetch(request)
+            if let tempInfo = info.first {
+                tempInfo.setValue(routeInfo.dataWrittenDate, forKey: "dataWrittenDate")
+                tempInfo.setValue(routeInfo.gymName, forKey: "gymName")
+                tempInfo.setValue(routeInfo.isChallengeComplete, forKey: "isChallengeComplete")
+                tempInfo.setValue(routeInfo.problemLevel, forKey: "problemLevel")
+            }
+        } catch {
+            print("CoreDataDAO UpateRoute Method \(error.localizedDescription)")
+        }
+    }
+    
     func createPageData(pageInfo: PageInfo, routeFinding: RouteFinding) {
         let page = Page(context: context)
         page.rowOrder = Int16(pageInfo.rowOrder)
