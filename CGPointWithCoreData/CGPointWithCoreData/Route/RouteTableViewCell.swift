@@ -66,7 +66,6 @@ class RouteTableViewCell: UITableViewCell {
 
 extension RouteTableViewCell {
     func labelConfigure(routeInfo: RouteFinding) {
-//        gymNameLabel.text = "ROUTE \(routeIndex)"
         gymNameLabel.text = "ROUTE \(routeInfo.dataWrittenDate)"
     }
 }

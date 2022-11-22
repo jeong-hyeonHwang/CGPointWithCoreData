@@ -32,7 +32,6 @@ class CoreDataDAO {
                 createPageData(pageInfo: pageInfo, routeFinding: routeFinding as! RouteFinding)
             })
         }
-        
         return routeFinding
     }
     
@@ -117,6 +116,7 @@ class CoreDataDAO {
         }
     }
     // 단일 데이터 삭제를 위한 메소드
+
     func deleteRouteFindingData(routeFinding: RouteFinding) {
         
         guard let id = routeFinding.id else { return }
@@ -126,12 +126,12 @@ class CoreDataDAO {
         do {
             let info = try context.fetch(request)
             if let tempInfo = info.first {
+                print(tempInfo.dataWrittenDate)
                 context.delete(tempInfo)
             }
         } catch {
             print("CoreDataManager DeleteData Method \(error.localizedDescription)")
         }
-//        saveData()
     }
     
     func deletePageData(pages: [Page], routeFinding: RouteFinding) {

@@ -17,10 +17,6 @@ class RouteViewController: UIViewController {
         return view
     }()
     
-    private lazy var rowLastIndex: Int = {
-        return DataManager.shared.getRouteFindingList().count
-    }()
-    
     private lazy var routeInfoView = {
         let view = UIView()
         
@@ -45,14 +41,12 @@ class RouteViewController: UIViewController {
     }()
     
     override func viewDidLoad() {
-//        DataManager.shared.deleteAllData()
         layoutConfigure()
         navigationBarConfigure()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print("HIII")
-//        routeList = DataManager.shared.getRouteFindingList()
+        routeList = DataManager.shared.getRouteFindingList().sorted(by: { $0.dataWrittenDate > $1.dataWrittenDate })
         routeTableView.reloadData()
     }
     
@@ -132,13 +126,13 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RouteTableViewCell", for: indexPath) as! RouteTableViewCell
         
         let index = indexPath.row
-        cell.labelConfigure(routeInfo: DataManager.shared.getRouteFindingList()[index])
+        cell.labelConfigure(routeInfo: routeList[index])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
-        let route = DataManager.shared.getRouteFindingList()[index]
+        let route = routeList[index]
         let pages = route.pages as! Set<Page>
         let pageNum = pages.count
         let indices = pages.indices.map{$0}
@@ -182,10 +176,9 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
-            print(indexPath)
             let index = indexPath.row
-//            DataManager.shared.getRouteFindingList().remove(at: index)
-            DataManager.shared.deleteRouteData(route: DataManager.shared.getRouteFindingList()[index])
+            DataManager.shared.deleteRouteData(route: routeList[index])
+            routeList.remove(at: index)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         }

@@ -30,6 +30,7 @@ final class DataManager {
     
     func addRoute(routeInfo: RouteInfo) {
         let routeFinding = coreDataDAO.createRouteFindingData(routeInfo: routeInfo) as! RouteFinding
+        print("lllll ", routeFinding.dataWrittenDate)
         routeFindingList.append(routeFinding)
     }
 
@@ -58,10 +59,8 @@ final class DataManager {
     
     func deleteRouteData(route: RouteFinding) {
         coreDataDAO.deleteRouteFindingData(routeFinding: route)
-        let indices = routeFindingList.filter({ $0 == route }).indices
-        if indices.count > 0 {
-            routeFindingList.remove(at: indices[0])
-        }
+        guard let index = routeFindingList.firstIndex(of: route) else { return }
+        routeFindingList.remove(at: index)
     }
     
     func saveData() {
