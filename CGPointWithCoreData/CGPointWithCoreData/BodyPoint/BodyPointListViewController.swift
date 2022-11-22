@@ -70,7 +70,7 @@ extension BodyPointListViewController: UITableViewDelegate, UITableViewDataSourc
         let cell = tableView.dequeueReusableCell(withIdentifier: BodyPointListTableViewCell.identifier, for: indexPath) as! BodyPointListTableViewCell
         
         let index = indexPath.row
-        cell.numberLabel.text = "POINT \(index)"
+        cell.numberLabel.text = "POINT \(pageInfo.points?[index].primaryPosition)"
         //        CoreDataManager.shared.readPageData(routeFinding: routeFinding)[index]
         return cell
     }
