@@ -1,5 +1,5 @@
 //
-//  CoreDataManager.swift
+//  DataManager.swift
 //  CGPointWithCoreData
 //
 //  Created by 황정현 on 2022/11/18.
@@ -14,6 +14,7 @@ final class DataManager {
     
     private var coreDataDAO: CoreDataDAO
     private var routeFindingList: [RouteFinding] = []
+    
     init() {
         coreDataDAO = CoreDataDAO()
         updateRepository()
@@ -41,9 +42,7 @@ final class DataManager {
     
     // MARK: CREATE PAGE
     func updatePageData(pageInfo: [PageInfo], routeFinding: RouteFinding) {
-        print(pageInfo.count)
         for info in pageInfo {
-            print("HERE --- ")
             coreDataDAO.createPageData(pageInfo: info, routeFinding: routeFinding)
         }
     }
@@ -51,7 +50,6 @@ final class DataManager {
     // MARK: CREATE POINT 포인트 추가
     func addPointData(pointInfo: [Page : [BodyPointInfo]]) {
         for (key, value) in pointInfo {
-            print("hi")
             coreDataDAO.createPointData(bodyPointInfo: value, page: key)
         }
     }
@@ -82,8 +80,6 @@ final class DataManager {
     func deletePointsData(removePointList: [Page : [BodyPoint]]) {
         coreDataDAO.deletePointData(removePointList: removePointList)
     }
-    
-    
     
     func saveData() {
         coreDataDAO.saveData()

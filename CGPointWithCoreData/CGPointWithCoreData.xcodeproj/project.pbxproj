@@ -19,7 +19,7 @@
 		3A53352629276082007BFE6B /* CGPointWithCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3A53352429276082007BFE6B /* CGPointWithCoreData.xcdatamodeld */; };
 		3A53352829276082007BFE6B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A53352729276082007BFE6B /* Assets.xcassets */; };
 		3A53352B29276082007BFE6B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A53352929276082007BFE6B /* LaunchScreen.storyboard */; };
-		3A53354C2927B169007BFE6B /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A53354B2927B169007BFE6B /* CoreDataManager.swift */; };
+		3A53354C2927B169007BFE6B /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A53354B2927B169007BFE6B /* DataManager.swift */; };
 		3A53355D2927D9EF007BFE6B /* RouteInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A53355C2927D9EF007BFE6B /* RouteInfo.swift */; };
 		3A53355F2927DDD7007BFE6B /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A53355E2927DDD7007BFE6B /* RouteTableViewCell.swift */; };
 		3A5335632927E3D0007BFE6B /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5335622927E3D0007BFE6B /* Date+.swift */; };
@@ -41,6 +41,7 @@
 		3A464190292D0B9900C6B7A3 /* Page+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Page+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		3A464199292D0EF400C6B7A3 /* BodyPoint+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BodyPoint+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3A46419A292D0EF400C6B7A3 /* BodyPoint+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BodyPoint+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3A46419F292DFC9F00C6B7A3 /* DataMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMethod.swift; sourceTree = "<group>"; };
 		3A53351829276082007BFE6B /* CGPointWithCoreData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CGPointWithCoreData.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A53351B29276082007BFE6B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3A53351D29276082007BFE6B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -49,7 +50,7 @@
 		3A53352729276082007BFE6B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3A53352A29276082007BFE6B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3A53352C29276082007BFE6B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3A53354B2927B169007BFE6B /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		3A53354B2927B169007BFE6B /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		3A53355C2927D9EF007BFE6B /* RouteInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteInfo.swift; sourceTree = "<group>"; };
 		3A53355E2927DDD7007BFE6B /* RouteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
 		3A5335622927E3D0007BFE6B /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
@@ -78,6 +79,7 @@
 		3A53350F29276082007BFE6B = {
 			isa = PBXGroup;
 			children = (
+				3A46419F292DFC9F00C6B7A3 /* DataMethod.swift */,
 				3A53351A29276082007BFE6B /* CGPointWithCoreData */,
 				3A53351929276082007BFE6B /* Products */,
 			);
@@ -120,7 +122,7 @@
 				3A46419A292D0EF400C6B7A3 /* BodyPoint+CoreDataProperties.swift */,
 				3A46418F292D0B9900C6B7A3 /* Page+CoreDataClass.swift */,
 				3A464190292D0B9900C6B7A3 /* Page+CoreDataProperties.swift */,
-				3A53354B2927B169007BFE6B /* CoreDataManager.swift */,
+				3A53354B2927B169007BFE6B /* DataManager.swift */,
 				3A533588292A42C6007BFE6B /* CoreDataDAO.swift */,
 			);
 			path = CoreData;
@@ -251,7 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A464194292D0B9900C6B7A3 /* RouteFinding+CoreDataProperties.swift in Sources */,
-				3A53354C2927B169007BFE6B /* CoreDataManager.swift in Sources */,
+				3A53354C2927B169007BFE6B /* DataManager.swift in Sources */,
 				3A53356B2927F851007BFE6B /* PageTableViewCell.swift in Sources */,
 				3A53352029276082007BFE6B /* RouteViewController.swift in Sources */,
 				3A464195292D0B9900C6B7A3 /* Page+CoreDataClass.swift in Sources */,
