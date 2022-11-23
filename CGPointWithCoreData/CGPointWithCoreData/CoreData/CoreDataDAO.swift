@@ -58,17 +58,12 @@ class CoreDataDAO {
         page.rowOrder = Int16(pageInfo.rowOrder)
         routeFinding.addToPages(page)
         
-        if pageInfo.points?.count == 0 {
-            print("THERE's NO POINT..")
-        } else {
-            guard let points = pageInfo.points else { return }
-            createPointData(bodyPointInfo: points, page: page)
-        }
+        guard let points = pageInfo.points else { return }
+        createPointData(bodyPointInfo: points, page: page)
     }
     
     func createPointData(bodyPointInfo: [BodyPointInfo], page: Page) {
         for info in bodyPointInfo {
-            print(info)
             let bodyPoint = BodyPoint(context: context)
             bodyPoint.id = UUID()
             bodyPoint.footOrHand = info.footOrHand.rawValue
@@ -120,7 +115,6 @@ class CoreDataDAO {
         do {
             let info = try context.fetch(request)
                 if let tempInfo = info.first {
-                    print("SUCCEEDD")
                     tempInfo.primaryXCoordinate = data.primaryPosition.x
                     tempInfo.primaryYCoordinate = data.primaryPosition.y
                     tempInfo.secondaryXCoordinate = data.secondaryPosition.x
@@ -128,7 +122,7 @@ class CoreDataDAO {
                     tempInfo.setValue(data.isForce, forKey: "isForce")
                     tempInfo.setValue(data.footOrHand.rawValue, forKey: "footOrHand")
                     print(tempInfo)
-                } else { print("NO")}
+                }
         } catch {
             print("CoreDataDAO UpdatePointData Method \(error.localizedDescription)")
         }
@@ -144,7 +138,6 @@ class CoreDataDAO {
         do {
             let info = try context.fetch(request)
             if let tempInfo = info.first {
-                print(tempInfo.dataWrittenDate)
                 context.delete(tempInfo)
             }
         } catch {
