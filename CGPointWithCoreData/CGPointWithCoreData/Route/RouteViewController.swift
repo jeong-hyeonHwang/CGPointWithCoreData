@@ -126,11 +126,13 @@ class RouteViewController: UIViewController {
 }
 
 extension RouteViewController {
+    
     @objc func addRouteButtonClicked() {
-        let rootVC = PageViewController()
-        rootVC.routeInfoForUI = RouteInfo(dataWrittenDate: Date.randomBetween(start: Date(timeIntervalSince1970: 0), end: Date(timeIntervalSince1970: 30000)), gymName: "", problemLevel: 0, isChallengeComplete: false, pages: [PageInfo(rowOrder: 0, points: [])])
-        rootVC.isModalType = true
-        rootVC.route = nil
+        let rootVC = RenewalPageViewController()
+        rootVC.routeDM = RouteDataManager(routeFinding: nil)
+//        rootVC.routeInfoForUI = RouteInfo(dataWrittenDate: Date.randomBetween(start: Date(timeIntervalSince1970: 0), end: Date(timeIntervalSince1970: 30000)), gymName: "", problemLevel: 0, isChallengeComplete: false, pages: [PageInfo(rowOrder: 0, points: [])])
+//        rootVC.isModalType = true
+        
         
         let modalTypeNavigationVC = UINavigationController(rootViewController: rootVC)
         modalTypeNavigationVC.modalPresentationStyle = .fullScreen
@@ -182,7 +184,7 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
         pageNumberLabel.text = "PAGE FOR \(pageNum)"
         pointsNumberLabel.text = pointsNumStr
         
-        let vc = PageViewController()
+        let vc = RenewalPageViewController()
         let pageArray = Array(route.pages as! Set<Page>)
         var pageInfo: [PageInfo] = []
         var points2dimensionArray: [[BodyPointInfo]] = []
@@ -197,9 +199,9 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
             pageInfo.append(PageInfo(rowOrder: Int(pageArray[i].rowOrder), points: points2dimensionArray[i]))
         }
         
-        vc.routeInfoForUI = RouteInfo(dataWrittenDate: route.dataWrittenDate, gymName: route.gymName, problemLevel: Int(route.problemLevel), isChallengeComplete: route.isChallengeComplete, pages: pageInfo)
-        vc.isModalType = false
-        vc.route = route
+        vc.routeDM = RouteDataManager(routeFinding: route)
+        vc.routeDM.routeInfoForUI = RouteInfo(dataWrittenDate: route.dataWrittenDate, gymName: route.gymName, problemLevel: Int(route.problemLevel), isChallengeComplete: route.isChallengeComplete, pages: pageInfo)
+        vc.routeDM.route = route
         navigationController?.pushViewController(vc, animated: true)
     }
     

@@ -30,13 +30,16 @@ final class RouteDataManager {
     var removePointList: [Page : [BodyPoint]] = [:]
     
     // isModalType == false로 데이터 수정 및 삭제를 위해
-    private var pages: [Page] = []
+    var pages: [Page] = []
     
     init(routeFinding: RouteFinding?) {
         
         // CASE: 새로운 루트 추가 OR 기존 루트 수정
         route = routeFinding
-        pages = Array(route?.pages as! Set<Page>)
+        guard let route = route else {
+            routeInfoForUI = RouteInfo(dataWrittenDate: Date.randomBetween(start: Date(timeIntervalSince1970: 0), end: Date(timeIntervalSince1970: 30000)), gymName: "", problemLevel: 0, isChallengeComplete: false, pages: [PageInfo(rowOrder: 0, points: [])])
+            return }
+        pages = Array(route.pages as! Set<Page>)
     }
     
     func save() {
@@ -146,7 +149,8 @@ final class RouteDataManager {
     func updatePointData(pageIndex: Int, pointIndex: Int, targetPointInfo: BodyPointInfo) {
         
         let page = routeInfoForUI.pages[pageIndex]
-        guard let existPoint: BodyPointInfo = page.points?[pointIndex] else { return }
+        guard let points = page.points else { return }
+        let existPoint: BodyPointInfo = points[pointIndex]
         
         // UI DATA PART: UI를 구성하는 데이터에서 업데이트(수정)
         guard let routeInfoForUIIndex = routeInfoForUI.pages[pageIndex].points?.firstIndex(of: existPoint) else { return }
