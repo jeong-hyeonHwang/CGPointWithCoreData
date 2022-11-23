@@ -172,7 +172,6 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
         let pages = route.pages as! Set<Page>
         let pageNum = pages.count
         let indices = pages.indices.map{$0}
-        print("PAGE NUM: \(pageNum)")
         
         var pointsNumStr = "POINTS NO ORDER\n[ "
         for i in 0..<pageNum {
@@ -185,23 +184,9 @@ extension RouteViewController: UITableViewDelegate, UITableViewDataSource {
         pointsNumberLabel.text = pointsNumStr
         
         let vc = RenewalPageViewController()
-        let pageArray = Array(route.pages as! Set<Page>)
-        var pageInfo: [PageInfo] = []
-        var points2dimensionArray: [[BodyPointInfo]] = []
-        for i in 0..<pageArray.count {
-            let pointsArray = Array(pageArray[i].points as! Set<BodyPoint>)
-            var pointInfo: [BodyPointInfo] = []
-            for j in 0..<pointsArray.count {
-                let temp = BodyPointInfo(footOrHand: FootOrHand(rawValue: pointsArray[j].footOrHand) ?? FootOrHand.hand, isForce: pointsArray[j].isForce, primaryPosition: CGPoint(x: pointsArray[j].primaryXCoordinate, y: pointsArray[j].primaryYCoordinate), secondaryPosition: CGPoint(x: pointsArray[j].secondaryXCoordinate, y: pointsArray[j].secondaryYCoordinate))
-                pointInfo.append(temp)
-            }
-            points2dimensionArray.append(pointInfo)
-            pageInfo.append(PageInfo(rowOrder: Int(pageArray[i].rowOrder), points: points2dimensionArray[i]))
-        }
         
         vc.routeDM = RouteDataManager(routeFinding: route)
-        vc.routeDM.routeInfoForUI = RouteInfo(dataWrittenDate: route.dataWrittenDate, gymName: route.gymName, problemLevel: Int(route.problemLevel), isChallengeComplete: route.isChallengeComplete, pages: pageInfo)
-        vc.routeDM.route = route
+        vc.routeDM.routeInfoForUI = route.returnRouteInfo()
         navigationController?.pushViewController(vc, animated: true)
     }
     

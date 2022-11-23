@@ -246,7 +246,6 @@ extension PageViewController {
                 newPointInfo[pages[index]] = []
             }
             newPointInfo[pages[index]]?.append(point)
-            print(newPointInfo[pages[index]]?.count)
         }
     }
     

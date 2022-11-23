@@ -117,14 +117,12 @@ class RenewalPageViewController: UIViewController {
             seperatorView.heightAnchor.constraint(equalToConstant: 4)
         ])
         
-        
         NSLayoutConstraint.activate([
             pageTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             pageTableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             pageTableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             pageTableView.bottomAnchor.constraint(equalTo: seperatorView.topAnchor, constant: -margin)
         ])
-        
         
     }
     

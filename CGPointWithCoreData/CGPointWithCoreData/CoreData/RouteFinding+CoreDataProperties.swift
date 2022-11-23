@@ -43,5 +43,21 @@ extension RouteFinding {
 }
 
 extension RouteFinding : Identifiable {
-
+    func returnRouteInfo() -> RouteInfo {
+        let pageArray = Array(self.pages as! Set<Page>)
+        var pageInfo: [PageInfo] = []
+        var points2dimensionArray: [[BodyPointInfo]] = []
+        for i in 0..<pageArray.count {
+            let pointsArray = Array(pageArray[i].points as! Set<BodyPoint>)
+            var pointInfo: [BodyPointInfo] = []
+            for j in 0..<pointsArray.count {
+                let temp = BodyPointInfo(footOrHand: FootOrHand(rawValue: pointsArray[j].footOrHand) ?? FootOrHand.hand, isForce: pointsArray[j].isForce, primaryPosition: CGPoint(x: pointsArray[j].primaryXCoordinate, y: pointsArray[j].primaryYCoordinate), secondaryPosition: CGPoint(x: pointsArray[j].secondaryXCoordinate, y: pointsArray[j].secondaryYCoordinate))
+                pointInfo.append(temp)
+            }
+            points2dimensionArray.append(pointInfo)
+            pageInfo.append(PageInfo(rowOrder: Int(pageArray[i].rowOrder), points: points2dimensionArray[i]))
+        }
+        
+        return RouteInfo(dataWrittenDate: self.dataWrittenDate, gymName: self.gymName, problemLevel: Int(self.problemLevel), isChallengeComplete: self.isChallengeComplete, pages: pageInfo)
+    }
 }

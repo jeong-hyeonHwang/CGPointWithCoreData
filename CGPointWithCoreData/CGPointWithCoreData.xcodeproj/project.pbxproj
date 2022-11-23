@@ -98,7 +98,6 @@
 		3A53351A29276082007BFE6B /* CGPointWithCoreData */ = {
 			isa = PBXGroup;
 			children = (
-				3A46419F292DFC9F00C6B7A3 /* RouteDataManager.swift */,
 				3A5335612927E3BC007BFE6B /* Extensions */,
 				3A53357A29291648007BFE6B /* Main */,
 				3A5335602927DDDF007BFE6B /* Route */,
@@ -125,6 +124,7 @@
 				3A46419A292D0EF400C6B7A3 /* BodyPoint+CoreDataProperties.swift */,
 				3A46418F292D0B9900C6B7A3 /* Page+CoreDataClass.swift */,
 				3A464190292D0B9900C6B7A3 /* Page+CoreDataProperties.swift */,
+				3A46419F292DFC9F00C6B7A3 /* RouteDataManager.swift */,
 				3A53354B2927B169007BFE6B /* DataManager.swift */,
 				3A533588292A42C6007BFE6B /* CoreDataDAO.swift */,
 			);
